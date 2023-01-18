@@ -2,27 +2,57 @@ import psycopg2
 conn = psycopg2.connect(database="unbxd",user="postgres",password="12345",host="localhost",port="5432")
 cursor=conn.cursor()
 def retrievedetails(productid):
-    return 1
+    cursor.execute("select * from product where uniqueId=%s",(productid,))
+    result=cursor.fetchone()
+    return {
+        "uniqueId":result[0],
+        "title":result[1],
+        "productImage":result[2],
+        "name":result[3],
+        "price":result[4],
+        "availability":result[5],
+        "productDescription":result[6]
+    }
 def insertdatabase(uniqueId,title,price,productDescription,productImage,availability,name,catlevel1Name,catlevel2Name):
-    productDescription=productDescription.replace("'","`")
-    title=title.replace("'","`")
-    name=name.replace("'","`")
-    a="insert into product values('"+uniqueId+"','"+title+"','"+productImage+"','"+name+"','"+str(price)+"','"+availability+"','"+productDescription+"')"
-    cursor.execute(a)
+    cursor.execute("insert into product values(%s,%s,%s,%s,%s,%s,%s)",(uniqueId,title,productImage,name,str(price),availability,productDescription, ))
     conn.commit()
-    b="select sid from catlevel1 where catlevel1='"+catlevel1Name+"'"
-    cursor.execute(b)
+    cursor.execute("select sid from catlevel1 where catlevel1=%s",(catlevel1Name,))
     result=cursor.fetchone()
     if result==None:
-        cursor.execute("insert into catlevel1 values('"+catlevel1Name+"')")
+        cursor.execute("insert into catlevel1 values(%s)",(catlevel1Name,))
         conn.commit()
-        cursor.execute("select sid from catlevel1 where catlevel1='"+catlevel1Name+"'")
+        cursor.execute("select sid from catlevel1 where catlevel1=%s",(catlevel1Name, ))
         result=cursor.fetchone()
-    c="insert into catlevel2 values('"+catlevel2Name+"','"+uniqueId+"',"+str(result[0])+")"
-    cursor.execute(c)
+    cursor.execute("insert into catlevel2 values(%s,%s,%s)",(catlevel2Name,uniqueId,str(result[0])))
     conn.commit()
-    
     return 1
-def updatedatabase(keys,values):
-
+def verify(uniqueId):
+    cursor.execute("select * from product where uniqueId=%s",(uniqueId, ))
+    a=cursor.fetchone()
+    if a==None:
+        return 1
+    return 0
+def updatetitle(uniqueId,title):
+    cursor.execute("update product set title=%s where uniqueId=%s",(title,uniqueId, ))
+    conn.commit()
+    return 1
+def updateprice(uniqueId,price):
+    cursor.execute("update product set price=%s where uniqueId=%s",(price,uniqueId, ))
+    conn.commit()
+    return 1
+def updateproductDescription(uniqueId,productDescription):
+    cursor.execute("update product set productDescription=%s where uniqueId=%s",(productDescription,uniqueId, ))
+    conn.commit()
+    return 1
+def updateproductImage(uniqueId,productImage):
+    cursor.execute("update product set productImage=%s where uniqueId=%s",(productImage,uniqueId, ))
+    conn.commit()
+    return 1
+def updateavailability(uniqueId,availability):
+    cursor.execute("update product set availability=%s where uniqueId=%s",(availability,uniqueId, ))
+    conn.commit()
+    return 1
+def updatename(uniqueId,name):
+    cursor.execute("update product set name=%s where uniqueId=%s",(name,uniqueId, ))
+    conn.commit()
     return 1
