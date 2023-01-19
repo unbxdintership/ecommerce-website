@@ -1,8 +1,6 @@
 import psycopg2
 conn = psycopg2.connect(database="unbxd",user="postgres",password="12345",host="localhost",port="5432")
 cursor=conn.cursor()
-print(1)
-print(2)
 def retrievedetails(productid):
     cursor.execute("select * from product where uniqueId=%s",(productid,))
     result=cursor.fetchone()
