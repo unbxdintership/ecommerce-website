@@ -56,3 +56,16 @@ def updatename(uniqueId,name):
     cursor.execute("update product set name=%s where uniqueId=%s",(name,uniqueId, ))
     conn.commit()
     return 1
+
+def catdetails(catid):
+    cursor.execute("select sid from catlevel1 where catlevel1=%s",(catid, ))
+    result=cursor.fetchone()
+    cursor.execute("select uniqueid2 from catlevel2 where pid=%s",(str(result[0])))
+    
+
+    result=cursor.fetchall()
+    uniqueid=[]
+    for i in result:
+        uniqueid.append(i[0])
+    print(uniqueid)
+    return 1
