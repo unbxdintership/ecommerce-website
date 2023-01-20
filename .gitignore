@@ -1,0 +1,5 @@
+/scripts/config.ini
+.DS_Store
+/scripts/out.json
+/scripts/update.json
+/Project-files/out.json

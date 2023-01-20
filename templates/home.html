@@ -77,7 +77,7 @@
 {% if products %}
 <div class="product__grid">
     {% for product in products %}
-    <a href="" class="product__link">
+    <a href="/product/{{ product[0] }}" class="product__link">
         <div class="product">
             <img class="product__image" src="{{ product[2] }}" />
             <p class="product__name">{{ product[0] }}</p>

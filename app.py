@@ -28,12 +28,12 @@ products = [
 ]
 
 
-@app.route("/products/")
+@app.route("/product/")
 def home():
     return render_template("home.html", title="HomePage", categories=categories, products=products)
 
 
-@app.route("/products/<product_id>")
+@app.route("/product/<product_id>")
 def render_product(product_id):
     product_name, product_price, product_url, product_description = products[0][0], products[0][1], products[0][2], "This is a very nice top which looks like a lightbulb."
     return render_template("product.html", categories=categories, product_id=product_id, product_name=product_name, product_price=product_price, product_url=product_url, product_description=product_description)
