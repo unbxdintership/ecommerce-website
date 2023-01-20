@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block head_content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+<style>
+    .product__grid {
+        width: 90%;
+        display: grid;
+        margin: 0 auto;
+        gap: 1px;
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .product__link {
+        text-decoration: none;
+        color: black;
+    }
+
+    .product:hover {
+        background-color: #f9dba0;
+        color: purple;
+        font-weight: bold;
+        transition: color 0.1s ease-in-out;
+    }
+
+    .product {
+        background-color: #ccc;
+        border: 1px solid black;
+        border-radius: 10px;
+        padding: 20px;
+        width: 60%;
+        height: 300px;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .product__image {
+        display: block;
+        width: 200px;
+        height: 200px;
+        border: 1px solid black;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 10px;
+    }
+
+    .product__name,
+    .product__price {
+        max-width: 90%;
+        width: -moz-fit-content;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .product_grid>.product {
+        padding: 20px;
+        justify-content: space-between;
+    }
+
+    .no__products__container {
+        display: flex
+    }
+
+    .no__products__message {
+        display: inline;
+        margin-top: 5rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+{% endblock %}
+
+{% block main_content %}
+{% if products %}
+<div class="product__grid">
+    {% for product in products %}
+    <a href="" class="product__link">
+        <div class="product">
+            <img class="product__image" src="{{ product[2] }}" />
+            <p class="product__name">{{ product[0] }}</p>
+            <p class="product__price">{{ product[1] }}</p>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="no__products__container">
+    <h1 class="no__products__message">No products to display.</h1>
+</div>
+{% endif %}
+{% endblock %}
