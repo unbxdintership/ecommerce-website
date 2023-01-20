@@ -13,4 +13,4 @@ class DB_Retrieve(Resource):
     def get(self, product_ID):
         product = self.retriever.get_product(product_ID)
         return product
-API.add_resource(DB_Retrieve, "/products/<string:productid>")
+API.add_resource(DB_Retrieve, "/product/<string:product_ID>")

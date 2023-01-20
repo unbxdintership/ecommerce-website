@@ -14,7 +14,7 @@ class Product_Search(Resource):
     def __init__(self):
         self.URL = config.get('search_api', "URL")
 
-    def get_products(self, query):
+    def get(self, query):
         rows = 10
         params = {
             "q": query,
