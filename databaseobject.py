@@ -13,6 +13,7 @@ def retrievedetails(productid):
         "availability":result[5],
         "productDescription":result[6]
     }
+    
 def insertdatabase(uniqueId,title,price,productDescription,productImage,availability,name,catlevel1Name,catlevel2Name):
     cursor.execute("insert into product values(%s,%s,%s,%s,%s,%s,%s)",(uniqueId,title,productImage,name,str(price),availability,productDescription, ))
     conn.commit()
