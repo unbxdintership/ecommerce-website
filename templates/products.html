@@ -1,7 +1,6 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block head_content %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 <style>
     .product__grid {
         width: 90%;
@@ -59,23 +58,23 @@
 </style>
 {% endblock %}
 
-{% block class_header_content %}
-<div class="row">
-    <div class="col-2">
-        <h1>Give Your Wardrobe <br> A Makeover!</h1>
-        <p>Style is a way to say who you are without having to speak.</p>
-        <a href="/home/" class="btn">Explore Now &#8594;</a>
-    </div>
-    <div class="col-2">
-        <img src="/static/images/fashion-background.png" alt="fashion-background">
+{% block main_content %}
+<div class="small-contanier">
+    <div class="sort-container">
+        <form action="/sort" method="get" class="sort-form">
+            <select class="sort-select" name="sort-select" id="sort-select">
+                <option value="Ascending">Ascending</option>
+                <option value="Descending">Descending</option>
+                <option value="Relevance">Relevance</option>
+            </select>
+            <button type="submit" class="sort-submit-btn">Sort</button>
+        </form>
     </div>
 </div>
-{% endblock %}
 
-{% block main_content %}
 {% if products %}
 <div class="small-container">
-    <h2 class="title">Featured Products</h2>
+    <h2 class="title">Products</h2>
     <div class="product__grid">
         {% for product in products %}
         <a href="/products/{{ product[0] }}" class="product__link">
