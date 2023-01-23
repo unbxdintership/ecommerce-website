@@ -19,10 +19,10 @@ class DB_Operations:
             "product_description": result[6]
         }
 
-    def get_category_details(self, category_ID):
+    def get_category_details(self, category_lvl1, category_lvl2):
         self.operater.cursor.execute('''
             select sid from catlevel1 where catlevel1=%s''',(
-                category_ID,))
+                category_lvl1,))
         result = self.operater.cursor.fetchone()
 
         self.operater.cursor.execute('''
@@ -30,9 +30,14 @@ class DB_Operations:
                 str(result[0]),))
         result= self.operater.cursor.fetchall()
         product_IDs = []
+        final = []
         for product in result:
             product_IDs.append(product[0])
-        return product_IDs
+        for id in product_IDs:
+            self.operater.cursor.execute("select * from product where product_ID=%s",(id,))
+            result = self.operater.cursor.fetchall()
+            final.append(result)
+        return result
 
     def insert_product(self, 
                     product_ID, 
@@ -131,3 +136,18 @@ class DB_Operations:
                 product_ID,))
         self.operater.conn.commit()
         return 1
+
+    def get_random_products(self):
+        self.operater.cursor.execute('''
+            select product_ID, 
+                product_name, 
+                product_price,
+                product_description,
+                product_image
+            from product limit 9
+        ''')
+        result = self.operater.cursor.fetchall()
+        final = []
+        for i in result:
+            final.append([i[0], i[1], i[2], i[3], i[4]])
+        return final

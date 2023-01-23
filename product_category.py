@@ -14,11 +14,11 @@ class Product_Details(Resource):
     def __init__(self):
         self.get_cat = DB_Operations()
 
-    def get(self, category_ID):
-        result = self.get_cat.get_category_details(category_ID)
+    def get(self, category_lvl1, category_lvl2):
+        result = self.get_cat.get_category_details(category_lvl1, category_lvl2)
         if result:
             return len(result)
-API.add_resource(Product_Details, "/category/<string:category_ID>")
+API.add_resource(Product_Details, "/category/<category_lvl1>/<category_lvl2/")
 
 if __name__=="__main__":
     app.run(debug=True)

@@ -2,6 +2,7 @@ import requests
 import configparser
 from flask import Flask, request
 from flask_restful import Api, Resource
+from db_operations import DB_Operations
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -13,6 +14,7 @@ class Product_Search(Resource):
 
     def __init__(self):
         self.URL = config.get('search_api', "URL")
+        self.operator = DB_Operations()
 
     def get(self, query):
         rows = 10
@@ -44,6 +46,22 @@ class Product_Search(Resource):
             result["product_description"].append(products["response"]["products"][counter]["product_description"])
             result["catlevel1"].append(products["response"]["products"][counter]["catlevel1"])
             result["catlevel2"].append(products["response"]["products"][counter]["catlevel2"])
+
+            if self.operator.verify_product(result["product_ID"][counter]):
+                self.operator.insert_product(
+                    result["product_ID"][counter],
+                    result["product_title"][counter],
+                    result["product_price"][counter],
+                    result["product_description"][counter],
+                    result["product_image"][counter],
+                    result["product_availability"][counter],
+                    result["product_name"][counter],
+                    result["catlevel1"][counter],
+                    result["catlevel2"][counter]
+                )
         
         return result
 API.add_resource(Product_Search, "/search/<string:query>")
+
+if __name__=="__main__":
+    app.run(debug=True)
