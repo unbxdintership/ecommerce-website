@@ -16,9 +16,10 @@ class Product_Details(Resource):
 
     def get(self, category_lvl1, category_lvl2):
         result = self.get_cat.get_category_details(category_lvl1, category_lvl2)
+        print(result)
         if result:
-            return len(result)
-API.add_resource(Product_Details, "/category/<category_lvl1>/<category_lvl2/")
+            return result
+API.add_resource(Product_Details, "/category/<category_lvl1>/<category_lvl2>/")
 
 if __name__=="__main__":
     app.run(debug=True)

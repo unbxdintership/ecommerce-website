@@ -119,8 +119,8 @@ nav ul li a:hover {
     background: #563434;
 }
 
-.category-Men,
-.category-Women {
+.category-men,
+.category-women {
     margin-top: 30px;
     box-shadow: 0 0 20px 0px rgba(0,0,0,0.2);
     border-radius: 10px;
@@ -141,17 +141,24 @@ nav ul li a:hover {
 }
 
 .category-lvl2 {
-    display: inline-flex;
-    text-align: center;
-    width: 24%;
-    flex-basis: 25%;
-    justify-content: space-between;
+    display: flex;
+    width: 100%;
+    justify-content: start;
 }
 
 .category-lvl2-value {
-    display: flex;
-    align-items: center;
+    display: inline-block;
+    justify-content: space-between;
+    transition: transform 0.25s;
+    color: #555;
+    width: 24%;
+    text-align: center;
     padding-bottom: 25px;
+}
+
+.category-lvl2-value:hover {
+    color: #000;
+    transform: translateY(-5px);
 }
 
 a {
