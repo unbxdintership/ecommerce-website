@@ -25,41 +25,47 @@
                 </div>
                 <nav>
                     <ul>
-                        <form action="/search" method="get" class="searchbar__form">
-                            <input type="text" placeholder="Search products" class="searchbar">
+                        <form action="/search/" method="post" class="searchbar__form">
+                            <input type="text" placeholder="Search products" class="searchbar" name="searchbar">
                         </form>
                         {% for category, values in categories.items() %}
+                        {% set catlen1 = namespace(value=values|length) %}
+                        {% if catlen1.value!=0 %}
                         <li>
                             <div class="{{ category }}" onclick="showhide('category-{{ category }}')">{{ category }}
                             </div>
                         </li>
+                        {% endif %}
                         {% endfor %}
                         <li><a href="/products">Products</a></li>
                         <li><a href="/home">Home</a></li>
                 </nav>
             </div>
             {% for category, values in categories.items() %}
+            {% set catlen2 = namespace(value=values|length) %}
+            {% if catlen2.value!=0 %}
             <div class="category-{{ category }}" id="category-{{ category }}" style="display: none;">
                 <h1 class="category-title" id="category-title">Category - {{ category }}</h1>
                 {% set lvl2_length = values|length %}
                 {% set rem = lvl2_length%4 %}
-                {% set counter = 0 %}
+                {% set counter = namespace(value=0) %}
                 {% set prod_per_col = lvl2_length//4 %}
                 {% if rem!=0 %}
                 {% set prod_per_col = prod_per_col+1 %}
                 {% endif %}
                 <div class="category-lvl2-container">
-                    {% for counter in range(4) %}
+                    {% for cnt in range(4) %}
                     <div class="category-lvl2">
-                        {% for inner_counter in range(prod_per_col) %}
-                        <a href="/category/{{ category }}/{{ values[counter] }}" class="category-lvl2-value">{{
-                            values[counter] }}</a>
-                        {% set counter = counter+1 %}
+                        {% for inner_counter in range(0, prod_per_col) %}
+                        <a href="/category/{{ category }}/{{ values[counter.value] }}" class="category-lvl2-value">{{
+                            values[counter.value] }}</a>
+                        {% set counter.value = counter.value+1 %}
                         {% endfor %}
                     </div>
                     {% endfor %}
                 </div>
             </div>
+            {% endif %}
             {% endfor %}
             {% block class_header_content %}
             {% endblock %}

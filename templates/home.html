@@ -12,6 +12,7 @@
     }
 
     .product__link {
+        max-width: 90%;
         text-decoration: none;
         color: black;
         padding: 10px;
@@ -64,7 +65,7 @@
     <div class="col-2">
         <h1>Give Your Wardrobe <br> A Makeover!</h1>
         <p>Style is a way to say who you are without having to speak.</p>
-        <a href="/home/" class="btn">Explore Now &#8594;</a>
+        <a href="/products/" class="btn">Explore Now &#8594;</a>
     </div>
     <div class="col-2">
         <img src="/static/images/fashion-background.png" alt="fashion-background">
@@ -80,9 +81,9 @@
         {% for product in products %}
         <a href="/products/{{ product[0] }}" class="product__link">
             <div class="product">
-                <img src="" alt="">
-                <h4>{{ product[0] }}</h4>
-                <p>${{ product[1] }}</p>
+                <img src="{{ product[4] }}" alt="">
+                <h4>{{ product[1] }}</h4>
+                <p>${{ product[2] }}</p>
             </div>
         </a>
         {% endfor %}

@@ -59,7 +59,7 @@ class DB_Initialise:
         catlvl2_table = '''
             create table catlevel2(
                 catlevel2 text,
-                uniqueid2 text,
+                product_id2 text,
                 pid int);'''
         self.cursor.execute(product_table)
         self.conn.commit()

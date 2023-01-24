@@ -61,8 +61,9 @@
 {% block main_content %}
 <div class="small-contanier">
     <div class="sort-container">
-        <form action="/sort" method="get" class="sort-form">
+        <form action="/sort" method="post" class="sort-form">
             <select class="sort-select" name="sort-select" id="sort-select">
+                <option value="None">None</option>
                 <option value="Ascending">Ascending</option>
                 <option value="Descending">Descending</option>
                 <option value="Relevance">Relevance</option>

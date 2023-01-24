@@ -99,19 +99,19 @@
 <div class="small-container single-product">
     <div class="row">
         <div class="col-2">
-            <img src="" alt="" width="100%">
+            <img src="{{ product[2] }}" alt="" width="100%">
         </div>
         <div class="col-2">
             <p>Home / Product / {{ product[0] }}</p>
             <h1>{{ product[1] }}</h1>
-            <h4>${{ product[2] }}</h4>
+            <h4>${{ product[4] }}</h4>
             <h3>Product Details:</h3>
-            <p>{{ product[3] }}</p>
+            <p>{{ product[6] }}</p>
         </div>
     </div>
 </div>
 
-<!-- featured products -->
+<!-- featured products
 <div class="small-container">
     <h2 class="title">Featured Products</h2>
     <div class="row">
@@ -122,8 +122,8 @@
             <p>${{ product[1] }}</p>
         </div>
         {% endfor %}
-    </div>
+    </div> 
 
-</div>
+</div> -->
 </div>
 {% endblock %}
