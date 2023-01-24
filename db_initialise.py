@@ -27,19 +27,19 @@ class DB_Initialise:
             self.conn.commit()
             print("Dropped table - product.")
         except Exception as e:
-            print(e)
+            pass
         try:
             self.cursor.execute("drop table catlevel1")
             self.conn.commit()
             print("Dropped table - catlvl1.")
         except Exception as e:
-            print(e)
+            pass
         try:
             self.cursor.execute("drop table catlevel2")
             self.conn.commit()
             print("Dropped table - catlvl2.")
         except Exception as e:
-            print(e)
+            pass
 
     def create_database(self):
         self.clear_database()
@@ -55,14 +55,16 @@ class DB_Initialise:
         catlvl1_table = '''
             create table catlevel1(
                 catlevel1 text,
-                sid SERIAL)'''
+                sid SERIAL);'''
         catlvl2_table = '''
             create table catlevel2(
                 catlevel2 text,
-                product_ID2 text,
-                pid int)'''
+                product_id2 text,
+                pid int);'''
         self.cursor.execute(product_table)
+        self.conn.commit()
         self.cursor.execute(catlvl1_table)
+        self.conn.commit()
         self.cursor.execute(catlvl2_table)
         self.conn.commit()
         print("Created database.")
