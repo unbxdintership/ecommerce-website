@@ -176,6 +176,7 @@ class DB_Operations:
         return final
 
     def get_catlevel1(self):
+        
         self.operater.cursor.execute('''
             select * from catlevel1
         ''')
@@ -193,7 +194,7 @@ class DB_Operations:
             for j in result_1:
                 if not self.check_whitespace(j[0]):
                     final[i[0]].append(j[0])
-
+        print(final)
         return final
 
     def get_search_products(self, query, order=None):
