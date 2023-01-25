@@ -16,31 +16,92 @@ class Home(Resource):
     def get(self):
         products=self.operator.get_random_products(9)
         categories=self.operator.get_catlevel1()
-        return {
-            "products":products,
-            "categories":categories
-        }
+        return {"products":products,"categories":categories}
 API.add_resource(Home, "/home")
 
+
+class DB_Retrieve_Product(Resource):
+    def __init__(self):
+        self.retriever = DB_Operations()
+    def get(self, product_ID):
+        product = self.retriever.get_product(product_ID)
+        categories=self.retriever.get_catlevel1()
+        return {"product":product,"categories":categories}
+API.add_resource(DB_Retrieve_Product, "/products/<string:product_ID>")
 
 class DB_Retrieve_Random(Resource):
     def __init__(self):
         self.retriever = DB_Operations()
-
     def get(self):
-        products = self.retriever.get_random_products(9)
-        categories = self.retriever.get_catlevel1()
-        return {
-            "products": products,
-            "categories": categories
-        }
+        
+        products = self.retriever.get_random_products(18)
+        categories=self.retriever.get_catlevel1()
+        return {"products":products,"categories":categories}
 API.add_resource(DB_Retrieve_Random, "/products/")
+
+class Product_Details(Resource):
+    def __init__(self):
+        self.get_cat = DB_Operations()
+    def get(self, category_lvl1, category_lvl2):
+        categories = self.get_cat.get_catlevel1()
+        products = self.get_cat.get_category_lvl2_prods(category_lvl1, category_lvl2)
+        return {"products":products,"categories":categories}
+API.add_resource(Product_Details, "/category/<category_lvl1>/<category_lvl2>/")
+
+class Product_Search(Resource):
+    def __init__(self):
+        self.URL = config.get('search_api', "URL")
+        self.operator = DB_Operations()
+    def get(self):
+        # print(1111)
+        categories=self.operator.get_catlevel1()
+        rows = 10
+        query = request.args.get('q')
+        order=request.args.get('order')
+        params = {
+            "rows": rows,
+            "q": query
+        }
+        if order=="Ascending":
+            params["sort"]="price asc"
+        elif order=="Descending":
+            params["sort"]="price desc"
+        else:
+            pass
+        response = requests.get(self.URL, params)
+        products = response.json()
+        # print(products)
+        num_products = len(products["response"]["products"])
+        #print(num_products)
+        result = []
+        for counter in range(0, num_products):
+            result.append([
+                products["response"]["products"][counter]["uniqueId"],
+                products["response"]["products"][counter]["name"],
+                products["response"]["products"][counter]["price"],
+                products["response"]["products"][counter]["productDescription"],
+                products["response"]["products"][counter]["productImage"]
+            ])
+            if self.operator.verify_product(products["response"]["products"][counter]["uniqueId"]) == 0:
+                self.operator.insert_product(
+                    products["response"]["products"][counter]["uniqueId"],
+                    products["response"]["products"][counter]["title"],
+                    products["response"]["products"][counter]["price"],
+                    products["response"]["products"][counter]["productDescription"],
+                    products["response"]["products"][counter]["productImage"],
+                    products["response"]["products"][counter]["availability"],
+                    products["response"]["products"][counter]["name"],
+                    products["response"]["products"][counter]["catlevel1Name"],
+                    products["response"]["products"][counter]["catlevel2Name"]
+                )
+        
+        return {"products":result,"categories":categories}
+API.add_resource(Product_Search, "/search")
 
 
 class DB_Ingest(Resource):
     def __init__(self):
         self.operator = DB_Operations()
-
     def post(self):
         data = request.json
         for product in data:
@@ -65,7 +126,6 @@ class DB_Ingest(Resource):
                 product_catlevel1,
                 product_catlevel2
             )
-
             if ingestion_status == 2:
                 print(f"Product ID: {product_ID} already present.")
 
@@ -73,13 +133,12 @@ class DB_Ingest(Resource):
             return {"Data Ingestion": "Successful"}
         else:
             return {"Data Ingestion": "Unsuccessful"}
-
     def put(self):
         product = request.json
         for value in product:
             if value.get("uniqueId") == None:
                 print("Product ID not mentioned.")
-                return {"Data Update": "Unsuccessful"}
+                return {"Data Update": "Unsuccessful ❌"}
             else:
                 product_ID = value.get("uniqueId")
 
@@ -87,7 +146,7 @@ class DB_Ingest(Resource):
             if not status:
                 print(
                     f"Product with ID: {product_ID} not present in the database.")
-                return {"Data Update": "Unsuccessful"}
+                return {"Data Update": "Unsuccessful ❌"}
 
             if value.get("title") != None:
                 self.operator.update_title(product_ID, value.get("title"))
