@@ -85,6 +85,5 @@ def render_query():
     return render_template("products.html", products=products, categories=categories)   
 
 
-
 if __name__ == "__main__":
     app.run(debug=True)
