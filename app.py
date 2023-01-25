@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request
 from configparser import ConfigParser
 from db_operations import DB_Operations
-
-
+import requests
+domain="http://127.0.0.1:3000/"
 operator = DB_Operations()
 
 config = ConfigParser()
@@ -10,44 +10,60 @@ config.read('config.ini')
 
 app = Flask(__name__)
 
-products = []
-
 @app.route("/home/")
 def home():
-    global products
-    products = operator.get_random_products(9)
-    categories = operator.get_catlevel1()
+    finaldomain=domain+"home"
+    data=requests.get(url=finaldomain)
+    response=data.json()
+    products=response["products"]
+    categories=response["categories"]
     return render_template("home.html", title="HomePage", categories=categories, products=products)
 
 
+@app.route("/products/")
+def render_products():
+    # global products
+    finaldomain=domain+"products"
+    data=requests.get(url=finaldomain)
+    response=data.json()
+    products=response["products"]
+    categories=response["categories"]
+    return render_template("products.html", products=products, categories=categories)
+
 @app.route("/products/<product_id>/")
 def render_product(product_id):
-    product = operator.get_product(product_id)
-    categories = operator.get_catlevel1()
+    finaldomain=domain+"products/"+product_id
+    data=requests.get(url=finaldomain)#, params={"product_ID":product_id})
+    response=data.json()
+    product=response["product"]
+    categories=response["categories"]
     return render_template("product-details.html", product=product, categories=categories)
 
 @app.route("/category/<catlvl1>/<catlvl2>/")
 def render_catlvl2(catlvl1, catlvl2):
-    global products
-    categories = operator.get_catlevel1()
-    products = operator.get_category_lvl2_prods(catlvl1, catlvl2)
+    # global products
+    finaldomain=domain+"category/"+catlvl1+"/"+catlvl2
+    data=requests.get(url=finaldomain)
+    response=data.json()
+    categories = response["categories"]
+    products = response["products"]
     return render_template("category.html", catlevel1=catlvl1, catlevel2=catlvl2, categories=categories, products=products)
 
-@app.route("/products/")
-def render_products():
-    global products
-    products = operator.get_random_products(18)
-    categories = operator.get_catlevel1()
-    return render_template("products.html", products=products, categories=categories)
+
 
 @app.route("/search/", methods=["GET", "POST"])
 def render_query():
-    global products
-    categories = operator.get_catlevel1()
+    # global products
+    #categories = operator.get_catlevel1()
     if request.method=="POST":
         query = request.form.get("searchbar")
         order = request.form.get('sort-select')
+        finaldomain=domain+"search"
+        data=requests.get(finaldomain,params={"q":query,"order":order})
         products = operator.get_search_products(query, order)
+        response=data.json()
+        products=response["products"]
+        categories=response["categories"]
     return render_template("products.html", products=products, categories=categories)
 
 @app.route("/ingestion",methods=["POST","PUT"])
