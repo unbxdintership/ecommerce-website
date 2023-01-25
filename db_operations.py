@@ -226,11 +226,11 @@ class DB_Operations:
                 self.insert_product(
                     products["response"]["products"][counter]["uniqueId"],
                     products["response"]["products"][counter]["title"],
-                    products["response"]["products"][counter]["productImage"],
-                    products["response"]["products"][counter]["name"],
                     products["response"]["products"][counter]["price"],
-                    products["response"]["products"][counter]["availability"],
                     products["response"]["products"][counter]["productDescription"],
+                    products["response"]["products"][counter]["productImage"],
+                    products["response"]["products"][counter]["availability"],
+                    products["response"]["products"][counter]["name"],
                     products["response"]["products"][counter]["catlevel1Name"],
                     products["response"]["products"][counter]["catlevel2Name"]
                 )
