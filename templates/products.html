@@ -59,19 +59,6 @@
 {% endblock %}
 
 {% block main_content %}
-<div class="small-contanier">
-    <div class="sort-container">
-        <form action="/sort" method="post" class="sort-form">
-            <select class="sort-select" name="sort-select" id="sort-select">
-                <option value="None">None</option>
-                <option value="Ascending">Ascending</option>
-                <option value="Descending">Descending</option>
-                <option value="Relevance">Relevance</option>
-            </select>
-            <button type="submit" class="sort-submit-btn">Sort</button>
-        </form>
-    </div>
-</div>
 
 {% if products %}
 <div class="small-container">
@@ -81,7 +68,7 @@
         <a href="/products/{{ product[0] }}" class="product__link">
             <div class="product">
                 <img src="{{ product[4] }}" alt="">
-                <h4>{{ product[1] }}</h4>
+                <h4 class="product-title">{{ product[1] }}</h4>
                 <p>${{ product[2] }}</p>
             </div>
         </a>
@@ -90,7 +77,7 @@
 </div>
 {% else %}
 <div class="small-container">
-    <h2 class="title">No featured products.</h2>
+    <h2 class="title">No products to be displayed.</h2>
 </div>
 {% endif %}
 {% endblock %}

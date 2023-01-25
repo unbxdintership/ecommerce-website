@@ -10,8 +10,11 @@ config.read('config.ini')
 
 app = Flask(__name__)
 
+products = []
+
 @app.route("/home/")
 def home():
+    global products
     products = operator.get_random_products(9)
     categories = operator.get_catlevel1()
     return render_template("home.html", title="HomePage", categories=categories, products=products)
@@ -25,23 +28,26 @@ def render_product(product_id):
 
 @app.route("/category/<catlvl1>/<catlvl2>/")
 def render_catlvl2(catlvl1, catlvl2):
+    global products
     categories = operator.get_catlevel1()
     products = operator.get_category_lvl2_prods(catlvl1, catlvl2)
     return render_template("category.html", catlevel1=catlvl1, catlevel2=catlvl2, categories=categories, products=products)
 
 @app.route("/products/")
 def render_products():
+    global products
     products = operator.get_random_products(18)
     categories = operator.get_catlevel1()
     return render_template("products.html", products=products, categories=categories)
 
 @app.route("/search/", methods=["GET", "POST"])
 def render_query():
+    global products
+    categories = operator.get_catlevel1()
     if request.method=="POST":
         query = request.form.get("searchbar")
-        sort = request.form.get('sort-select')
-    products = operator.get_search_products(query)
-    categories = operator.get_catlevel1()
+        order = request.form.get('sort-select')
+        products = operator.get_search_products(query, order)
     return render_template("products.html", products=products, categories=categories)
 
 

@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link rel="icon" href="/static/images/shopping-cart.png" type="image/x-icon">
     {% block head_content %}
 
     {% endblock %}
@@ -25,14 +26,20 @@
                 </div>
                 <nav>
                     <ul>
-                        <form action="/search/" method="post" class="searchbar__form">
+                        <form action="/search/" method="post" class="form-search">
+                            <select class="sort-select" name="sort-select" id="sort-select">
+                                <option value="None">None</option>
+                                <option value="Ascending">Ascending</option>
+                                <option value="Descending">Descending</option>
+                                <option value="Relevance">Relevance</option>
+                            </select>
                             <input type="text" placeholder="Search products" class="searchbar" name="searchbar">
                         </form>
                         {% for category, values in categories.items() %}
                         {% set catlen1 = namespace(value=values|length) %}
                         {% if catlen1.value!=0 %}
                         <li>
-                            <div class="{{ category }}" onclick="showhide('category-{{ category }}')">{{ category }}
+                            <div id="catlevel1" class="{{ category }}" onclick="showhide('category-{{ category }}')">{{ category }}
                             </div>
                         </li>
                         {% endif %}
