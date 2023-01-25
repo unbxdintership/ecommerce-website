@@ -3,3 +3,4 @@ config.ini
 out.json
 update.json
 /Project-files/out.json
+/static/.DS_Store

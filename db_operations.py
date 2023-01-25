@@ -42,7 +42,7 @@ class DB_Operations:
         result = self.operater.cursor.fetchone()
 
         self.operater.cursor.execute('''
-            select uniqueid2 from catlevel2 where pid=%s and catlevel2=%s''', (
+            select product_id2 from catlevel2 where pid=%s and catlevel2=%s''', (
             str(result[0]),
             category_lvl2,))
         result = self.operater.cursor.fetchall()
@@ -77,38 +77,38 @@ class DB_Operations:
         else:
             self.operater.cursor.execute('''
                 insert into product values(%s,%s,%s,%s,%s,%s,%s)''', (
-                product_ID,
-                product_title,
-                product_image,
-                product_name,
-                str(product_price),
-                product_availability,
-                product_description,))
+                product_ID.strip(),
+                product_title.strip(),
+                str(product_image).strip(),
+                product_name.strip(),
+                (str(product_price)).strip(),
+                product_availability.strip(),
+                product_description.strip(),))
             self.operater.conn.commit()
             self.operater.cursor.execute('''
                 select sid from catlevel1 where catlevel1=%s''', (
-                product_catlevel1,))
+                product_catlevel1.strip(),))
             result = self.operater.cursor.fetchone()
             if result == None:
                 self.operater.cursor.execute('''
                     insert into catlevel1 values(%s)''', (
-                    product_catlevel1,))
+                    product_catlevel1.strip(),))
                 self.operater.cursor.execute('''
                     select sid from catlevel1 where catlevel1=%s''', (
-                    product_catlevel1,))
+                    product_catlevel1.strip(),))
                 result = self.operater.cursor.fetchone()
             self.operater.cursor.execute('''
                 insert into catlevel2 values(%s,%s,%s)''', (
-                product_catlevel2,
-                product_ID,
-                str(result[0]),))
+                product_catlevel2.strip(),
+                product_ID.strip(),
+                (str(result[0])).strip(),))
             self.operater.conn.commit()
             return 1
 
     def verify_product(self, product_ID):
         self.operater.cursor.execute('''
             select * from product where product_ID=%s''', (
-            product_ID,))
+            product_ID.strip(),))
         result = self.operater.cursor.fetchone()
         if result:
             return 1
@@ -116,47 +116,47 @@ class DB_Operations:
 
     def update_title(self, product_ID, product_title):
         self.operater.cursor.execute("update product set product_title=%s where product_ID=%s", (
-            product_title,
-            product_ID,))
+            product_title.strip(),
+            product_ID.strip(),))
         self.operater.conn.commit()
         return 1
 
     def update_price(self, product_ID, product_price):
         self.operater.cursor.execute("update product set product_price=%s where product_ID=%s", (
-            str(product_price),
-            product_ID,))
+            (str(product_price)).strip(),
+            product_ID.strip(),))
         self.operater.conn.commit()
         return 1
 
     def update_description(self, product_ID, product_description):
         self.operater.cursor.execute('''
             update product set product_description=%s where product_ID=%s''', (
-            product_description,
-            product_ID,))
+            product_description.strip(),
+            product_ID.strip(),))
         self.operater.conn.commit()
         return 1
 
     def update_image(self, product_ID, product_image):
         self.operater.cursor.execute('''
             update product set product_image=%s where product_ID=%s''', (
-            product_image,
-            product_ID,))
+            product_image.strip(),
+            product_ID.strip(),))
         self.operater.conn.commit()
         return 1
 
     def update_availability(self, product_ID, product_availability):
         self.operater.cursor.execute('''
             update product set product_availability=%s where product_ID=%s''', (
-            product_availability,
-            product_ID,))
+            product_availability.strip(),
+            product_ID.strip(),))
         self.operater.conn.commit()
         return 1
 
     def update_name(self, product_ID, product_name):
         self.operater.cursor.execute('''
             update product set product_name=%s where product_ID=%s''', (
-            product_name,
-            product_ID,))
+            product_name.strip(),
+            product_ID.strip(),))
         self.operater.conn.commit()
         return 1
 
@@ -196,12 +196,19 @@ class DB_Operations:
 
         return final
 
-    def get_search_products(self, query, sort=None):
+    def get_search_products(self, query, order=None):
         rows = 10
         params = {
             "q": query,
             "rows": rows
         }
+        if order=='Ascending':
+            params["sort"] = "price asc"
+        elif order=='Descending':
+            params['sort'] = "price desc"
+        else:
+            pass
+
         response = requests.get(config.get("search_api", "URL"), params)
         products = response.json()
         num_products = len(products["response"]["products"])

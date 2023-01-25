@@ -3,10 +3,13 @@
 {% block head_content %}
 <style>
     .small-container {
-        max-width: 100%;
+        max-width: 90%;
+        margin-left: auto;
+        margin-right: auto;
         margin-bottom: 70px;
         padding-left: 25px;
         padding-right: 25px;
+        box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.1);
     }
 
     .small-container .row {
@@ -22,15 +25,19 @@
         padding-left: 50px;
     }
 
-    .col-2 img {
-        max-width: 100%;
-        padding: 50px 0;
+    .col-2 h1 {
+        padding-top: 20px;
+        padding-bottom: 20px;
+        text-transform: capitalize;
     }
 
-    .col-2 h1 {
-        font-size: 50px;
-        line-height: 60px;
-        margin: 25px 0;
+    .col-2 img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 70%;
+        height: 70%;
+        padding: 50px 0;
     }
 
     .single-product .col-2 {
@@ -46,8 +53,6 @@
         font-size: 22px;
         font-weight: bold;
     }
-
-
 
     .title {
         text-align: center;
@@ -99,7 +104,7 @@
 <div class="small-container single-product">
     <div class="row">
         <div class="col-2">
-            <img src="{{ product[2] }}" alt="" width="100%">
+            <img src="{{ product[2] }}" alt="">
         </div>
         <div class="col-2">
             <p>Home / Product / {{ product[0] }}</p>
