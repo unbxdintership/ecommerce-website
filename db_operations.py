@@ -14,9 +14,9 @@ class DB_Operations:
     def check_whitespace(self, word):
         whitespaces = 0
         for character in word:
-            if character==' ':
-                whitespaces+=1
-        if whitespaces==len(word):
+            if character == ' ':
+                whitespaces += 1
+        if whitespaces == len(word):
             return 1
         else:
             return 0
@@ -63,15 +63,15 @@ class DB_Operations:
         return final
 
     def insert_product(self,
-            product_ID,
-            product_title,
-            product_price,
-            product_description,
-            product_image,
-            product_availability,
-            product_name,
-            product_catlevel1,
-            product_catlevel2):
+                       product_ID,
+                       product_title,
+                       product_price,
+                       product_description,
+                       product_image,
+                       product_availability,
+                       product_name,
+                       product_catlevel1,
+                       product_catlevel2):
         if self.verify_product(product_ID):
             return 2
         else:
@@ -161,14 +161,16 @@ class DB_Operations:
         return 1
 
     def get_random_products(self, number):
-        self.operater.cursor.execute('''
-            select product_ID, 
-                product_name, 
-                product_price,
-                product_description,
-                product_image
-            from product order by random() limit %s
-        ''', (number,))
+        # self.operater.cursor.execute('''
+        #     select product_ID,
+        #         product_name,
+        #         product_price,
+        #         product_description,
+        #         product_image
+        #     from product order by random() limit %s
+        # ''', (number,))
+        self.operater.cursor.execute(
+            '''select product_ID,product_name,product_price,product_description,product_image from product ''')
         result = self.operater.cursor.fetchall()
         final = []
         for i in result:
@@ -176,7 +178,7 @@ class DB_Operations:
         return final
 
     def get_catlevel1(self):
-        
+
         self.operater.cursor.execute('''
             select * from catlevel1
         ''')
@@ -194,7 +196,7 @@ class DB_Operations:
             for j in result_1:
                 if not self.check_whitespace(j[0]):
                     final[i[0]].append(j[0])
-        print(final)
+        #print(final)
         return final
 
     def get_search_products(self, query, order=None):
@@ -203,9 +205,9 @@ class DB_Operations:
             "q": query,
             "rows": rows
         }
-        if order=='Ascending':
+        if order == 'Ascending':
             params["sort"] = "price asc"
-        elif order=='Descending':
+        elif order == 'Descending':
             params['sort'] = "price desc"
         else:
             pass
