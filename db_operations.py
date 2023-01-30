@@ -209,9 +209,6 @@ class DB_Operations:
             params["sort"] = "price asc"
         elif order == 'Descending':
             params['sort'] = "price desc"
-        else:
-            pass
-
         response = requests.get(config.get("search_api", "URL"), params)
         products = response.json()
         num_products = len(products["response"]["products"])
