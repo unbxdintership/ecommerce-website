@@ -11,7 +11,6 @@ config.read('config.ini')
 
 app = Flask(__name__)
 
-
 @app.route("/home/")
 def home():
     domain = config.get("backend", "URL")
@@ -22,23 +21,15 @@ def home():
     categories = response["categories"]
     return render_template("home.html", title="HomePage", categories=categories, products=products)
 
-
-@app.route("/products")
+@app.route("/products/")
 def render_products():
     domain = config.get("backend", "URL")
     final_domain = domain + "/products"
-    pagenumber=1
-    
-    if request.args.get("page")!=None:
-        pagenumber=request.args.get("page")
-    params={"page":pagenumber}
-    print(pagenumber)
-    data = requests.get(url=final_domain,params=params)
+    data = requests.get(url=final_domain)
     response = data.json()
     products = response["products"]
     categories = response["categories"]
     return render_template("products.html", products=products, categories=categories)
-
 
 @app.route("/ingestion", methods={'POST', 'PUT'})
 def ingest_products():
@@ -47,14 +38,13 @@ def ingest_products():
     if request.method == 'POST':
         data = request.json()
         response = requests.post(url=final_domain, json=data)
-        #print(response)
+        print(response)
 
-    elif request.method == "PUT":
+    elif request.method=="PUT":
         product = request.json()
         for value in product:
             response = requests.put(url=final_domain, data=value)
-            #print(response)
-
+            print(response)
 
 @app.route("/products/<product_id>/")
 def render_product(product_id):
@@ -77,10 +67,9 @@ def render_catlvl2(catlvl1, catlvl2):
     products = data['products']
     return render_template("category.html", catlevel1=catlvl1, catlevel2=catlvl2, categories=categories, products=products)
 
-
 @app.route("/search/", methods=["GET", "POST"])
 def render_query():
-    if request.method == "POST":
+    if request.method=="POST":
         query = request.form.get("searchbar")
         order = request.form.get("sort-select")
     params = {
@@ -93,7 +82,7 @@ def render_query():
     data = response.json()
     products = data['products']
     categories = data['categories']
-    return render_template("products.html", products=products, categories=categories)
+    return render_template("products.html", products=products, categories=categories)   
 
 
 if __name__ == "__main__":

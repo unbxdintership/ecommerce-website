@@ -3,9 +3,8 @@ from flask_restful import Api, Resource
 import configparser
 from db_operations import DB_Operations
 import requests
-from redis_operation import *
-config = configparser.ConfigParser()
 import time
+config = configparser.ConfigParser()
 config.read('config.ini')
 
 app = Flask(__name__)
@@ -20,8 +19,6 @@ class Home(Resource):
         products = self.operator.get_random_products(9)
         categories = self.operator.get_catlevel1()
         return {"products": products, "categories": categories}
-
-
 API.add_resource(Home, "/home")
 
 
@@ -33,9 +30,7 @@ class DB_Retrieve_Product(Resource):
         product = self.retriever.get_product(product_ID)
         categories = self.retriever.get_catlevel1()
         return {"product": product, "categories": categories}
-
-
-API.add_resource(DB_Retrieve_Product, "/products/<string:product_ID>")
+API.add_resource(DB_Retrieve_Product, "/products/<string:product_ID>/")
 
 
 class DB_Retrieve_Random(Resource):
@@ -43,26 +38,10 @@ class DB_Retrieve_Random(Resource):
         self.retriever = DB_Operations()
 
     def get(self):
-        pagenumber=0
-
-        products = self.retriever.get_random_products(18)
+        products = self.retriever.get_random_products()
         categories = self.retriever.get_catlevel1()
-        # pagenumber=0
-        # length=len(products)
-        # page=request.args.get("page")
-        # if page!=None:
-        #     pagenumber=page
-        #     page=page+1
-        # else:
-        #     page=1
-        # if pagenumber*9+9>length:
-        #     lastpage=length
-        # else:
-        #     lastpage=pagenumber*9+9
-        # productlist=products[pagenumber*9:lastpage]
-        # print(len(productlist))
         return {"products": products, "categories": categories}
-API.add_resource(DB_Retrieve_Random, "/products")
+API.add_resource(DB_Retrieve_Random, "/products/")
 
 
 class Product_Details(Resource):
@@ -74,8 +53,6 @@ class Product_Details(Resource):
         products = self.get_cat.get_category_lvl2_prods(
             category_lvl1, category_lvl2)
         return {"products": products, "categories": categories}
-
-
 API.add_resource(Product_Details, "/category/<category_lvl1>/<category_lvl2>/")
 
 
@@ -83,69 +60,54 @@ class Product_Search(Resource):
     def __init__(self):
         self.URL = config.get('search_api', "URL")
         self.operator = DB_Operations()
-        self.redis=redis_operation()
 
     def get(self):
-
         categories = self.operator.get_catlevel1()
         rows = 10
         query = request.args.get('q')
         order = request.args.get('order')
-
         params = {
             "rows": rows,
             "q": query
         }
-
-        start1=time.time()
-        if (self.redis.get(query,order)):
-            end1=time.time()
-
-            print("for redis:",end1-start1)
-            return {"products": self.redis.get(query,order), "categories": categories}
-
-
         if order == "Ascending":
             params["sort"] = "price asc"
         elif order == "Descending":
             params["sort"] = "price desc"
+        status = self.operator.get_redis_products(params)
+        if status == 1:
+            response = requests.get(self.URL, params)
+            products = response.json()
+            num_products = len(products["response"]["products"])
+            result = []
+            for counter in range(0, num_products):
+                result.append([
+                    products["response"]["products"][counter].get("uniqueId", ""),
+                    products["response"]["products"][counter].get("name", ""),
+                    products["response"]["products"][counter].get("price", ""),
+                    products["response"]["products"][counter].get("productDescription", ""),
+                    products["response"]["products"][counter].get("productImage", "")
+                ])
+
+                if self.operator.verify_product(products["response"]["products"][counter]["uniqueId"]) == 0:
+                    self.operator.insert_product(
+                        products["response"]["products"][counter].get("uniqueId", ""),
+                        products["response"]["products"][counter].get("title", ""),
+                        products["response"]["products"][counter].get("price", ""),
+                        products["response"]["products"][counter].get("productDescription", ""),
+                        products["response"]["products"][counter].get("productImage", ""),
+                        products["response"]["products"][counter].get("availability", ""),
+                        products["response"]["products"][counter].get("name", ""),
+                        products["response"]["products"][counter].get("catlevel1Name", ""),
+                        products["response"]["products"][counter].get("catlevel2Name", "")
+                    )
+            status1 = self.operator.insert_redis_products(params, result)
+            if status1 == 1:
+                print("Inserted into redis...")
         else:
-            pass
-
-        start2=time.time()
-        response = requests.get(self.URL, params)
-        products = response.json()
-        end2=time.time()
-        print("api",end2-start2)
-        # print(products)
-        num_products = len(products["response"]["products"])
-        # print(num_products)
-        result = []
-        for counter in range(0, num_products):
-            result.append([
-                products["response"]["products"][counter]["uniqueId"],
-                products["response"]["products"][counter]["name"],
-                products["response"]["products"][counter]["price"],
-                products["response"]["products"][counter]["productDescription"],
-                products["response"]["products"][counter]["productImage"]
-            ])
-            if self.operator.verify_product(products["response"]["products"][counter]["uniqueId"]) == 0:
-                self.operator.insert_product(
-                    products["response"]["products"][counter]["uniqueId"],
-                    products["response"]["products"][counter]["title"],
-                    products["response"]["products"][counter]["price"],
-                    products["response"]["products"][counter]["productDescription"],
-                    products["response"]["products"][counter]["productImage"],
-                    products["response"]["products"][counter]["availability"],
-                    products["response"]["products"][counter]["name"],
-                    products["response"]["products"][counter]["catlevel1Name"],
-                    products["response"]["products"][counter]["catlevel2Name"]
-                )
-        self.redis.set(query,order,result)
+            result = status
         return {"products": result, "categories": categories}
-
-
-API.add_resource(Product_Search, "/search")
+API.add_resource(Product_Search, "/search/")
 
 
 class DB_Ingest(Resource):
@@ -228,9 +190,7 @@ class DB_Ingest(Resource):
 
             print(f"Updated product with ID: {product_ID}.\n  *****")
         return {"Data Update": "Successful"}
-
-
-API.add_resource(DB_Ingest, "/ingestion")
+API.add_resource(DB_Ingest, "/ingestion/")
 
 if __name__ == "__main__":
     app.run(debug=True, port=3000)

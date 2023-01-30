@@ -1,6 +1,7 @@
 import requests
 from db_initialise import DB_Initialise
 from configparser import ConfigParser
+import redis
 
 config = ConfigParser()
 config.read('config.ini')
@@ -10,6 +11,7 @@ class DB_Operations:
 
     def __init__(self):
         self.operater = DB_Initialise()
+        self.r = redis.Redis(host='localhost', port=6379)
 
     def check_whitespace(self, word):
         whitespaces = 0
@@ -20,6 +22,31 @@ class DB_Operations:
             return 1
         else:
             return 0
+
+    def insert_redis_products(self, params, products):
+        query, order = (params.get("q", "")).strip(), (params.get("sort", "")).strip()
+        redis_query = f"{query}-{order}"
+        # self.r.psetex(redis_query, 100000, products)
+        for product in products:
+            self.r.rpush(redis_query, *product)
+        self.r.expire(redis_query, 60)
+        return 1
+
+    def get_redis_products(self, params):
+        query, order = (params.get("q", "")).strip(), (params.get("sort", "")).strip()
+        redis_query = f"{query}-{order}"
+        final = []
+        if self.r.exists(redis_query):
+            products = self.r.lrange(redis_query, 0, -1)
+            for length in range(len(products)//5):
+                product = products[length*5: length*5+5]
+                for index in range(len(product)):
+                    product[index] = product[index].decode()
+                final.append(product)
+            print("Got products from redis...")
+            return final
+        else:
+            return 1
 
     def get_product(self, product_ID):
         self.operater.cursor.execute(
@@ -63,15 +90,15 @@ class DB_Operations:
         return final
 
     def insert_product(self,
-                       product_ID,
-                       product_title,
-                       product_price,
-                       product_description,
-                       product_image,
-                       product_availability,
-                       product_name,
-                       product_catlevel1,
-                       product_catlevel2):
+                    product_ID,
+                    product_title,
+                    product_price,
+                    product_description,
+                    product_image,
+                    product_availability,
+                    product_name,
+                    product_catlevel1,
+                    product_catlevel2):
         if self.verify_product(product_ID):
             return 2
         else:
@@ -160,17 +187,25 @@ class DB_Operations:
         self.operater.conn.commit()
         return 1
 
-    def get_random_products(self, number):
-        # self.operater.cursor.execute('''
-        #     select product_ID,
-        #         product_name,
-        #         product_price,
-        #         product_description,
-        #         product_image
-        #     from product order by random() limit %s
-        # ''', (number,))
-        self.operater.cursor.execute(
-            '''select product_ID,product_name,product_price,product_description,product_image from product ''')
+    def get_random_products(self, number=None):
+        if number!=None:
+            self.operater.cursor.execute('''
+                select product_ID, 
+                    product_name, 
+                    product_price,
+                    product_description,
+                    product_image
+                from product order by random() limit %s
+            ''', (number,))
+        else:
+            self.operater.cursor.execute('''
+                select product_ID, 
+                    product_name, 
+                    product_price,
+                    product_description,
+                    product_image
+                from product order by random()
+            ''')
         result = self.operater.cursor.fetchall()
         final = []
         for i in result:
@@ -178,7 +213,6 @@ class DB_Operations:
         return final
 
     def get_catlevel1(self):
-
         self.operater.cursor.execute('''
             select * from catlevel1
         ''')
@@ -196,7 +230,6 @@ class DB_Operations:
             for j in result_1:
                 if not self.check_whitespace(j[0]):
                     final[i[0]].append(j[0])
-        #print(final)
         return final
 
     def get_search_products(self, query, order=None):
@@ -209,33 +242,30 @@ class DB_Operations:
             params["sort"] = "price asc"
         elif order == 'Descending':
             params['sort'] = "price desc"
-        else:
-            pass
-
         response = requests.get(config.get("search_api", "URL"), params)
         products = response.json()
         num_products = len(products["response"]["products"])
         result = []
         for counter in range(0, num_products):
             result.append([
-                products["response"]["products"][counter]["uniqueId"],
-                products["response"]["products"][counter]["name"],
-                products["response"]["products"][counter]["price"],
-                products["response"]["products"][counter]["productDescription"],
-                products["response"]["products"][counter]["productImage"]
+                products["response"]["products"][counter].get("uniqueId", ""),
+                products["response"]["products"][counter].get("name", ""),
+                products["response"]["products"][counter].get("price", ""),
+                products["response"]["products"][counter].get("productDescription", ""),
+                products["response"]["products"][counter].get("productImage", "")
             ])
 
             if self.verify_product(products["response"]["products"][counter]["uniqueId"]) == 0:
                 self.insert_product(
-                    products["response"]["products"][counter]["uniqueId"],
-                    products["response"]["products"][counter]["title"],
-                    products["response"]["products"][counter]["price"],
-                    products["response"]["products"][counter]["productDescription"],
-                    products["response"]["products"][counter]["productImage"],
-                    products["response"]["products"][counter]["availability"],
-                    products["response"]["products"][counter]["name"],
-                    products["response"]["products"][counter]["catlevel1Name"],
-                    products["response"]["products"][counter]["catlevel2Name"]
+                    products["response"]["products"][counter].get("uniqueId", ""),
+                    products["response"]["products"][counter].get("title", ""),
+                    products["response"]["products"][counter].get("price", ""),
+                    products["response"]["products"][counter].get("productDescription", ""),
+                    products["response"]["products"][counter].get("productImage", ""),
+                    products["response"]["products"][counter].get("availability", ""),
+                    products["response"]["products"][counter].get("name", ""),
+                    products["response"]["products"][counter].get("catlevel1Name", ""),
+                    products["response"]["products"][counter].get("catlevel2Name", "")
                 )
 
         return result
