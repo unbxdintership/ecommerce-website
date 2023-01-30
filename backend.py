@@ -232,6 +232,5 @@ class DB_Ingest(Resource):
 
 API.add_resource(DB_Ingest, "/ingestion")
 
-
 if __name__ == "__main__":
     app.run(debug=True, port=3000)
