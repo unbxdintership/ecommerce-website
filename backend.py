@@ -3,76 +3,123 @@ from flask_restful import Api, Resource
 import configparser
 from db_operations import DB_Operations
 import requests
+from redis_operation import *
 config = configparser.ConfigParser()
+import time
 config.read('config.ini')
 
 app = Flask(__name__)
 API = Api(app)
+
 
 class Home(Resource):
     def __init__(self):
         self.operator = DB_Operations()
 
     def get(self):
-        products=self.operator.get_random_products(9)
-        categories=self.operator.get_catlevel1()
-        return {"products":products,"categories":categories}
+        products = self.operator.get_random_products(9)
+        categories = self.operator.get_catlevel1()
+        return {"products": products, "categories": categories}
+
+
 API.add_resource(Home, "/home")
 
 
 class DB_Retrieve_Product(Resource):
     def __init__(self):
         self.retriever = DB_Operations()
+
     def get(self, product_ID):
         product = self.retriever.get_product(product_ID)
-        categories=self.retriever.get_catlevel1()
-        return {"product":product,"categories":categories}
+        categories = self.retriever.get_catlevel1()
+        return {"product": product, "categories": categories}
+
+
 API.add_resource(DB_Retrieve_Product, "/products/<string:product_ID>")
+
 
 class DB_Retrieve_Random(Resource):
     def __init__(self):
         self.retriever = DB_Operations()
+
     def get(self):
-        
+        pagenumber=0
+
         products = self.retriever.get_random_products(18)
-        categories=self.retriever.get_catlevel1()
-        return {"products":products,"categories":categories}
-API.add_resource(DB_Retrieve_Random, "/products/")
+        categories = self.retriever.get_catlevel1()
+        # pagenumber=0
+        # length=len(products)
+        # page=request.args.get("page")
+        # if page!=None:
+        #     pagenumber=page
+        #     page=page+1
+        # else:
+        #     page=1
+        # if pagenumber*9+9>length:
+        #     lastpage=length
+        # else:
+        #     lastpage=pagenumber*9+9
+        # productlist=products[pagenumber*9:lastpage]
+        # print(len(productlist))
+        return {"products": products, "categories": categories}
+API.add_resource(DB_Retrieve_Random, "/products")
+
 
 class Product_Details(Resource):
     def __init__(self):
         self.get_cat = DB_Operations()
+
     def get(self, category_lvl1, category_lvl2):
         categories = self.get_cat.get_catlevel1()
-        products = self.get_cat.get_category_lvl2_prods(category_lvl1, category_lvl2)
-        return {"products":products,"categories":categories}
+        products = self.get_cat.get_category_lvl2_prods(
+            category_lvl1, category_lvl2)
+        return {"products": products, "categories": categories}
+
+
 API.add_resource(Product_Details, "/category/<category_lvl1>/<category_lvl2>/")
+
 
 class Product_Search(Resource):
     def __init__(self):
         self.URL = config.get('search_api', "URL")
         self.operator = DB_Operations()
+        self.redis=redis_operation()
+
     def get(self):
-        # print(1111)
-        categories=self.operator.get_catlevel1()
+
+        categories = self.operator.get_catlevel1()
         rows = 10
         query = request.args.get('q')
-        order=request.args.get('order')
+        order = request.args.get('order')
+
         params = {
             "rows": rows,
             "q": query
         }
-        if order=="Ascending":
-            params["sort"]="price asc"
-        elif order=="Descending":
-            params["sort"]="price desc"
+
+        start1=time.time()
+        if (self.redis.get(query,order)):
+            end1=time.time()
+
+            print("for redis:",end1-start1)
+            return {"products": self.redis.get(query,order), "categories": categories}
+
+
+        if order == "Ascending":
+            params["sort"] = "price asc"
+        elif order == "Descending":
+            params["sort"] = "price desc"
         else:
             pass
+
+        start2=time.time()
         response = requests.get(self.URL, params)
         products = response.json()
+        end2=time.time()
+        print("api",end2-start2)
         # print(products)
         num_products = len(products["response"]["products"])
-        #print(num_products)
+        # print(num_products)
         result = []
         for counter in range(0, num_products):
             result.append([
@@ -94,14 +141,17 @@ class Product_Search(Resource):
                     products["response"]["products"][counter]["catlevel1Name"],
                     products["response"]["products"][counter]["catlevel2Name"]
                 )
-        
-        return {"products":result,"categories":categories}
+        self.redis.set(query,order,result)
+        return {"products": result, "categories": categories}
+
+
 API.add_resource(Product_Search, "/search")
 
 
 class DB_Ingest(Resource):
     def __init__(self):
         self.operator = DB_Operations()
+
     def post(self):
         data = request.json
         for product in data:
@@ -133,6 +183,7 @@ class DB_Ingest(Resource):
             return {"Data Ingestion": "Successful"}
         else:
             return {"Data Ingestion": "Unsuccessful"}
+
     def put(self):
         product = request.json
         for value in product:
@@ -177,6 +228,8 @@ class DB_Ingest(Resource):
 
             print(f"Updated product with ID: {product_ID}.\n  *****")
         return {"Data Update": "Successful"}
+
+
 API.add_resource(DB_Ingest, "/ingestion")
 
 if __name__ == "__main__":
