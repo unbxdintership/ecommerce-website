@@ -62,7 +62,11 @@
 
 {% if products %}
 <div class="small-container">
+    {% if query %}
+    <h2 class="title">{{ query }} Products</h2>
+    {% else %}
     <h2 class="title">Products</h2>
+    {% endif %}
     <div class="product__grid">
         {% for product in products %}
         <a href="/products/{{ product[0] }}" class="product__link">
@@ -74,6 +78,37 @@
         </a>
         {% endfor %}
     </div>
+</div>
+<div class="pagination">
+    <!-- Pagination Links-->
+    <div class="text-right">
+        {% if page!=1 %}
+        <a href="{{ url_for('render_products', page=page-1) }}" class="btn-not-active btn-outline-dark">
+            <b>&laquo;</b>
+        </a>
+        {% endif %}
+        {% if page-1!=0 %}
+        <a href="{{ url_for('render_products', page=page-1) }}" class="btn-not-active btn-outline-dark">
+            <b>{{ page-1 }}</b>
+        </a>
+        {% endif %}
+        <a href="{{ url_for('render_products', page=page) }}" class="btn btn-outline-dark">
+            <b>{{ page }}</b>
+        </a>
+        {% if page+1 <= pages %}
+        <a href="{{ url_for('render_products', page=page+1) }}" class="btn-not-active btn-outline-dark">
+            <b>{{ page+1 }}</b>
+        </a>
+        {% endif %}
+        {% if page!=pages %}
+        <a href="{{ url_for('render_products', page=page+1) }}" class="btn-not-active btn-outline-dark">
+            <b>&raquo;</b>
+        </a>
+        {% endif %}
+    </div>
+    <p class="text-right mt-3">
+        Showing page {{ page }} of {{ pages }}
+    </p>
 </div>
 {% else %}
 <div class="small-container">

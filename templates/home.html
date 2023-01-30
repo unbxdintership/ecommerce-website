@@ -65,7 +65,7 @@
     <div class="col-2">
         <h1>Give Your Wardrobe <br> A Makeover!</h1>
         <p>Style is a way to say who you are without having to speak.</p>
-        <a href="/products" class="btn">Explore Now &#8594;</a>
+        <a href="{{ url_for('render_products', page=1) }}" class="btn">Explore Now &#8594;</a>
     </div>
     <div class="col-2">
         <img src="/static/images/fashion-background.png" alt="fashion-background">
