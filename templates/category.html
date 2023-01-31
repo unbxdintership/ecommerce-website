@@ -77,5 +77,36 @@
         {% endfor %}
     </div>
 </div>
+<div class="pagination">
+    <!-- Pagination Links-->
+    <div class="text-right">
+        {% if page!=1 %}
+        <a href="{{ url_for('render_catlvl2', page=page-1, catlvl1=catlevel1, catlvl2=catlevel2) }}" class="btn-not-active btn-outline-dark">
+            <b>&laquo;</b>
+        </a>
+        {% endif %}
+        {% if page-1!=0 %}
+        <a href="{{ url_for('render_catlvl2', page=page-1, catlvl1=catlevel1, catlvl2=catlevel2) }}" class="btn-not-active btn-outline-dark">
+            <b>{{ page-1 }}</b>
+        </a>
+        {% endif %}
+        <a href="{{ url_for('render_catlvl2', page=page, catlvl1=catlevel1, catlvl2=catlevel2) }}" class="btn btn-outline-dark">
+            <b>{{ page }}</b>
+        </a>
+        {% if page+1 <= pages %}
+        <a href="{{ url_for('render_catlvl2', page=page+1, catlvl1=catlevel1, catlvl2=catlevel2) }}" class="btn-not-active btn-outline-dark">
+            <b>{{ page+1 }}</b>
+        </a>
+        {% endif %}
+        {% if page!=pages %}
+        <a href="{{ url_for('render_catlvl2', page=page+1, catlvl1=catlevel1, catlvl2=catlevel2) }}" class="btn-not-active btn-outline-dark">
+            <b>&raquo;</b>
+        </a>
+        {% endif %}
+    </div>
+    <p class="text-right mt-3">
+        Showing page {{ page }} of {{ pages }}
+    </p>
+</div>
 {% endif %}
 {% endblock %}

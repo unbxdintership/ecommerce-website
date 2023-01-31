@@ -8,6 +8,19 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+.pagination {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 50px;
+    align-items: center
+}
+
+.pagination div,
+.pagination p{
+    text-align: center;
+}
+
 /* .header {
     background: radial-gradient(#fff, #ffd6d6);
 } */
@@ -132,6 +145,7 @@ nav ul li a:hover {
     color: #ff523b;
     padding: 20px;
     margin-left: 10px;
+    text-transform: capitalize;
 }
 
 .category-lvl2-container {
@@ -182,9 +196,27 @@ p {
     transition: background 0.25s;
 }
 
+.btn-not-active {
+    display: inline-block;
+    background: #fff;
+    color: #ff523b;
+    padding: 8px 30px;
+    margin: 30px 0;
+    border-radius: 30px;
+    border: 1px solid #ff523b;
+    transition: background 0.25s;
+}
+
 .btn:hover {
     background: #563434;
 }
+
+.btn-not-active:hover {
+    color: #fff;
+    background: #563434;
+    border: none;
+}
+
 
 .title {
     text-align: center;

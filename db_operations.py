@@ -23,18 +23,16 @@ class DB_Operations:
         else:
             return 0
 
-    def insert_redis_products(self, params, products):
-        query, order = (params.get("q", "")).strip(), (params.get("sort", "")).strip()
-        redis_query = f"{query}-{order}"
+    def insert_redis_products(self, catlvl1, catlvl2, products):
+        redis_query = f"{catlvl1.strip()}-{catlvl2.strip()}"
         # self.r.psetex(redis_query, 100000, products)
         for product in products:
             self.r.rpush(redis_query, *product)
         self.r.expire(redis_query, 60)
         return 1
 
-    def get_redis_products(self, params):
-        query, order = (params.get("q", "")).strip(), (params.get("sort", "")).strip()
-        redis_query = f"{query}-{order}"
+    def get_redis_products(self, catlvl1, catlvl2):
+        redis_query = f"{catlvl1.strip()}-{catlvl2.strip()}"
         final = []
         if self.r.exists(redis_query):
             products = self.r.lrange(redis_query, 0, -1)
@@ -61,7 +59,8 @@ class DB_Operations:
             result[5],
             result[6]
         ]
-    #to change-done
+    # to change-done
+
     def get_category_lvl2_prods(self, category_lvl1, category_lvl2):
         self.operater.cursor.execute('''
             select id from category_table where category=%s''', (
@@ -88,17 +87,18 @@ class DB_Operations:
             result = self.operater.cursor.fetchone()
             final.append(result)
         return final
-    #to change-done
+    # to change-done
+
     def insert_product(self,
-                    product_ID,
-                    product_title,
-                    product_price,
-                    product_description,
-                    product_image,
-                    product_availability,
-                    product_name,
-                    product_catlevel1,
-                    product_catlevel2):
+                       product_ID,
+                       product_title,
+                       product_price,
+                       product_description,
+                       product_image,
+                       product_availability,
+                       product_name,
+                       product_catlevel1,
+                       product_catlevel2):
         if self.verify_product(product_ID):
             return 2
         else:
@@ -112,44 +112,29 @@ class DB_Operations:
                 product_availability.strip(),
                 product_description.strip(),))
             self.operater.conn.commit()
-            #insert catlevel 1
             if (self.checkparent(product_catlevel1)):
-                self.operater.cursor.execute('''insert into category_table (category,parent_id,level) values(%s,%s,%s)''',(product_catlevel1.strip(),0,1,))
+                self.operater.cursor.execute(
+                    '''insert into category_table (category,parent_id,level) values(%s,%s,%s)''', (product_catlevel1.strip(), 0, 1,))
                 self.operater.conn.commit()
-            #insert catlevel 2
+            # insert catlevel 2
 
-            self.operater.cursor.execute('''select id from category_table where category=%s''',(product_catlevel1.strip(),))
-            result=self.operater.cursor.fetchone()
-                        
-            self.operater.cursor.execute('''insert into category_table (category,parent_id,productid,level) values(%s,%s,%s,%s)''',(product_catlevel2.strip(),result[0],product_ID,2,))
+            self.operater.cursor.execute(
+                '''select id from category_table where category=%s''', (product_catlevel1.strip(),))
+            result = self.operater.cursor.fetchone()
+
+            self.operater.cursor.execute('''insert into category_table (category,parent_id,productid,level) values(%s,%s,%s,%s)''', (
+                product_catlevel2.strip(), result[0], product_ID, 2,))
             self.operater.conn.commit()
-
-            # self.operater.cursor.execute('''
-            #     select sid from catlevel1 where catlevel1=%s''', (
-            #     product_catlevel1.strip(),))
-            # result = self.operater.cursor.fetchone()
-            # if result == None:
-            #     self.operater.cursor.execute('''
-            #         insert into catlevel1 values(%s)''', (
-            #         product_catlevel1.strip(),))
-            #     self.operater.cursor.execute('''
-            #         select sid from catlevel1 where catlevel1=%s''', (
-            #         product_catlevel1.strip(),))
-            #     result = self.operater.cursor.fetchone()
-            # self.operater.cursor.execute('''
-            #     insert into catlevel2 values(%s,%s,%s)''', (
-            #     product_catlevel2.strip(),
-            #     product_ID.strip(),
-            #     (str(result[0])).strip(),))
-            # self.operater.conn.commit()
             return 1
-    def checkparent(self,category):
-        self.operater.cursor.execute('''select * from category_table where category=%s''',(category,))
-        result=self.operater.cursor.fetchone()
-        if result==None:
+
+    def checkparent(self, category):
+        self.operater.cursor.execute(
+            '''select * from category_table where category=%s''', (category,))
+        result = self.operater.cursor.fetchone()
+        if result == None:
             return 1
         return 0
-        
+
     def verify_product(self, product_ID):
         self.operater.cursor.execute('''
             select * from productinfo where product_ID=%s''', (
@@ -205,44 +190,35 @@ class DB_Operations:
         self.operater.conn.commit()
         return 1
 
-    def get_random_products(self, number=None):
-        if number!=None:
-            self.operater.cursor.execute('''
-                select product_ID, 
-                    product_name, 
-                    product_price,
-                    product_description,
-                    product_image
-                from productinfo order by random() limit %s
-            ''', (number,))
-        else:
-            self.operater.cursor.execute('''
-                select product_ID, 
-                    product_name, 
-                    product_price,
-                    product_description,
-                    product_image
-                from productinfo order by random()
-            ''')
+    def get_random_products(self):
+        self.operater.cursor.execute('''
+            select product_ID, 
+                product_name, 
+                product_price,
+                product_description,
+                product_image
+            from productinfo order by random()
+        ''')
         result = self.operater.cursor.fetchall()
         final = []
         for i in result:
             final.append([i[0], i[1], i[2], i[3], i[4]])
         return final
-    #to change
+    # to change
+
     def get_catlevel1(self):
         self.operater.cursor.execute('''
-            select category,id from category_table where level=%s
-        ''',(1,))
+            select category, id from category_table where level=%s
+        ''', (1,))
         result = self.operater.cursor.fetchall()
-        #print("result"result)
+        # print("result"result)
 
         final = {}
         for i in result:
             final[i[0]] = []
             # print(type(i[1]))
             self.operater.cursor.execute(''' 
-                select DISTINCT category
+                select distinct category
                 from category_table where parent_id=%s
             ''', (i[1],))
             result_1 = self.operater.cursor.fetchall()
@@ -252,10 +228,10 @@ class DB_Operations:
         return final
 
     def get_search_products(self, query, order=None):
-        rows = 10
+        rows = 90
         params = {
+            "rows": rows,
             "q": query,
-            "rows": rows
         }
         if order == 'Ascending':
             params["sort"] = "price asc"
@@ -270,21 +246,29 @@ class DB_Operations:
                 products["response"]["products"][counter].get("uniqueId", ""),
                 products["response"]["products"][counter].get("name", ""),
                 products["response"]["products"][counter].get("price", ""),
-                products["response"]["products"][counter].get("productDescription", ""),
-                products["response"]["products"][counter].get("productImage", "")
+                products["response"]["products"][counter].get(
+                    "productDescription", ""),
+                products["response"]["products"][counter].get(
+                    "productImage", "")
             ])
 
             if self.verify_product(products["response"]["products"][counter]["uniqueId"]) == 0:
                 self.insert_product(
-                    products["response"]["products"][counter].get("uniqueId", ""),
+                    products["response"]["products"][counter].get(
+                        "uniqueId", ""),
                     products["response"]["products"][counter].get("title", ""),
                     products["response"]["products"][counter].get("price", ""),
-                    products["response"]["products"][counter].get("productDescription", ""),
-                    products["response"]["products"][counter].get("productImage", ""),
-                    products["response"]["products"][counter].get("availability", ""),
+                    products["response"]["products"][counter].get(
+                        "productDescription", ""),
+                    products["response"]["products"][counter].get(
+                        "productImage", ""),
+                    products["response"]["products"][counter].get(
+                        "availability", ""),
                     products["response"]["products"][counter].get("name", ""),
-                    products["response"]["products"][counter].get("catlevel1Name", ""),
-                    products["response"]["products"][counter].get("catlevel2Name", "")
+                    products["response"]["products"][counter].get(
+                        "catlevel1Name", ""),
+                    products["response"]["products"][counter].get(
+                        "catlevel2Name", "")
                 )
 
         return result
