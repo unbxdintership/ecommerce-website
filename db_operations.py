@@ -49,7 +49,6 @@ class DB_Operations:
     def get_product(self, product_ID):
         self.operater.cursor.execute(
             "select * from productinfo where product_ID=%s", (product_ID,))
-            "select * from productinfo where product_ID=%s", (product_ID,))
         result = self.operater.cursor.fetchone()
         return [
             result[0],
@@ -63,9 +62,8 @@ class DB_Operations:
     #to change-done
     def get_category_lvl2_prods(self, category_lvl1, category_lvl2):
         self.operater.cursor.execute('''
-            select id from category_table where category=%s''', (
-            select id from category_table where category=%s''', (
-            category_lvl1,))
+            select id from category_table where category=%s''',
+            (category_lvl1,))
         result = self.operater.cursor.fetchone()
 
         self.operater.cursor.execute('''
@@ -85,7 +83,6 @@ class DB_Operations:
                         product_description,
                         product_image 
                     from productinfo where product_ID=%s''', (id,))
-                    from productinfo where product_ID=%s''', (id,))
             result = self.operater.cursor.fetchone()
             final.append(result)
         return final
@@ -104,7 +101,6 @@ class DB_Operations:
             return 2
         else:
             self.operater.cursor.execute('''
-                insert into productinfo values(%s,%s,%s,%s,%s,%s,%s)''', (
                 insert into productinfo values(%s,%s,%s,%s,%s,%s,%s)''', (
                 product_ID.strip(),
                 product_title.strip(),
@@ -140,7 +136,6 @@ class DB_Operations:
     def verify_product(self, product_ID):
         self.operater.cursor.execute('''
             select * from productinfo where product_ID=%s''', (
-            select * from productinfo where product_ID=%s''', (
             product_ID.strip(),))
         result = self.operater.cursor.fetchone()
         if result:
@@ -149,14 +144,12 @@ class DB_Operations:
 
     def update_title(self, product_ID, product_title):
         self.operater.cursor.execute("update productinfo set product_title=%s where product_ID=%s", (
-        self.operater.cursor.execute("update productinfo set product_title=%s where product_ID=%s", (
             product_title.strip(),
             product_ID.strip(),))
         self.operater.conn.commit()
         return 1
 
     def update_price(self, product_ID, product_price):
-        self.operater.cursor.execute("update productinfo set product_price=%s where product_ID=%s", (
         self.operater.cursor.execute("update productinfo set product_price=%s where product_ID=%s", (
             (str(product_price)).strip(),
             product_ID.strip(),))
@@ -166,7 +159,6 @@ class DB_Operations:
     def update_description(self, product_ID, product_description):
         self.operater.cursor.execute('''
             update productinfo set product_description=%s where product_ID=%s''', (
-            update productinfo set product_description=%s where product_ID=%s''', (
             product_description.strip(),
             product_ID.strip(),))
         self.operater.conn.commit()
@@ -174,7 +166,6 @@ class DB_Operations:
 
     def update_image(self, product_ID, product_image):
         self.operater.cursor.execute('''
-            update productinfo set product_image=%s where product_ID=%s''', (
             update productinfo set product_image=%s where product_ID=%s''', (
             product_image.strip(),
             product_ID.strip(),))
@@ -184,7 +175,6 @@ class DB_Operations:
     def update_availability(self, product_ID, product_availability):
         self.operater.cursor.execute('''
             update productinfo set product_availability=%s where product_ID=%s''', (
-            update productinfo set product_availability=%s where product_ID=%s''', (
             product_availability.strip(),
             product_ID.strip(),))
         self.operater.conn.commit()
@@ -192,7 +182,6 @@ class DB_Operations:
 
     def update_name(self, product_ID, product_name):
         self.operater.cursor.execute('''
-            update productinfo set product_name=%s where product_ID=%s''', (
             update productinfo set product_name=%s where product_ID=%s''', (
             product_name.strip(),
             product_ID.strip(),))
