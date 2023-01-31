@@ -15,7 +15,7 @@ class Home(Resource):
         self.operator = DB_Operations()
 
     def get(self):
-        products = self.operator.get_random_products(18)
+        products = self.operator.get_random_products()
         categories = self.operator.get_catlevel1()
         return {"products": products, "categories": categories}
 API.add_resource(Home, "/home")
@@ -122,7 +122,9 @@ class DB_Ingest(Resource):
         self.operator = DB_Operations()
 
     def post(self):
+        
         data = request.json
+        
         for product in data:
             product_ID = product['uniqueId']
             product_title = product['title']
