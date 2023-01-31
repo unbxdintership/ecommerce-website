@@ -142,6 +142,7 @@ class DB_Ingest(Resource):
             )
             if ingestion_status == 2:
                 print(f"Product ID: {product_ID} already present.")
+                return {"Data Ingestion": "Unsuccessful"}
 
         if ingestion_status == 1:
             return {"Data Ingestion": "Successful"}

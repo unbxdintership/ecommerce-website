@@ -45,7 +45,8 @@ def ingest_products():
         for value in product:
             response = requests.put(url=final_domain, data=value)
             print(response)
-    
+    return response
+    return {"ingestion":"successfull"}
 @app.route("/products/<product_id>/")
 def render_product(product_id):
     domain = config.get("backend", "URL")
