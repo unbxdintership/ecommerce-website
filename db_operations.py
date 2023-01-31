@@ -50,7 +50,7 @@ class DB_Operations:
 
     def get_product(self, product_ID):
         self.operater.cursor.execute(
-            "select * from product where product_ID=%s", (product_ID,))
+            "select * from productinfo where product_ID=%s", (product_ID,))
         result = self.operater.cursor.fetchone()
         return [
             result[0],
@@ -61,16 +61,16 @@ class DB_Operations:
             result[5],
             result[6]
         ]
-
+    #to change-done
     def get_category_lvl2_prods(self, category_lvl1, category_lvl2):
         self.operater.cursor.execute('''
-            select sid from catlevel1 where catlevel1=%s''', (
+            select id from category_table where category=%s''', (
             category_lvl1,))
         result = self.operater.cursor.fetchone()
 
         self.operater.cursor.execute('''
-            select product_id2 from catlevel2 where pid=%s and catlevel2=%s''', (
-            str(result[0]),
+            select productid from category_table where parent_id=%s and category=%s''', (
+            result[0],
             category_lvl2,))
         result = self.operater.cursor.fetchall()
         product_IDs = []
@@ -84,11 +84,11 @@ class DB_Operations:
                         product_price,
                         product_description,
                         product_image 
-                    from product where product_ID=%s''', (id,))
+                    from productinfo where product_ID=%s''', (id,))
             result = self.operater.cursor.fetchone()
             final.append(result)
         return final
-
+    #to change-done
     def insert_product(self,
                     product_ID,
                     product_title,
@@ -103,7 +103,7 @@ class DB_Operations:
             return 2
         else:
             self.operater.cursor.execute('''
-                insert into product values(%s,%s,%s,%s,%s,%s,%s)''', (
+                insert into productinfo values(%s,%s,%s,%s,%s,%s,%s)''', (
                 product_ID.strip(),
                 product_title.strip(),
                 str(product_image).strip(),
@@ -112,29 +112,47 @@ class DB_Operations:
                 product_availability.strip(),
                 product_description.strip(),))
             self.operater.conn.commit()
-            self.operater.cursor.execute('''
-                select sid from catlevel1 where catlevel1=%s''', (
-                product_catlevel1.strip(),))
-            result = self.operater.cursor.fetchone()
-            if result == None:
-                self.operater.cursor.execute('''
-                    insert into catlevel1 values(%s)''', (
-                    product_catlevel1.strip(),))
-                self.operater.cursor.execute('''
-                    select sid from catlevel1 where catlevel1=%s''', (
-                    product_catlevel1.strip(),))
-                result = self.operater.cursor.fetchone()
-            self.operater.cursor.execute('''
-                insert into catlevel2 values(%s,%s,%s)''', (
-                product_catlevel2.strip(),
-                product_ID.strip(),
-                (str(result[0])).strip(),))
-            self.operater.conn.commit()
-            return 1
+            #insert catlevel 1
+            if (self.checkparent(product_catlevel1)):
+                self.operater.cursor.execute('''insert into category_table (category,parent_id,level) values(%s,%s,%s)''',(product_catlevel1.strip(),0,1,))
+                self.operater.conn.commit()
+            #insert catlevel 2
 
+            self.operater.cursor.execute('''select id from category_table where category=%s''',(product_catlevel1.strip(),))
+            result=self.operater.cursor.fetchone()
+                        
+            self.operater.cursor.execute('''insert into category_table (category,parent_id,productid,level) values(%s,%s,%s,%s)''',(product_catlevel2.strip(),result[0],product_ID,2,))
+            self.operater.conn.commit()
+
+            # self.operater.cursor.execute('''
+            #     select sid from catlevel1 where catlevel1=%s''', (
+            #     product_catlevel1.strip(),))
+            # result = self.operater.cursor.fetchone()
+            # if result == None:
+            #     self.operater.cursor.execute('''
+            #         insert into catlevel1 values(%s)''', (
+            #         product_catlevel1.strip(),))
+            #     self.operater.cursor.execute('''
+            #         select sid from catlevel1 where catlevel1=%s''', (
+            #         product_catlevel1.strip(),))
+            #     result = self.operater.cursor.fetchone()
+            # self.operater.cursor.execute('''
+            #     insert into catlevel2 values(%s,%s,%s)''', (
+            #     product_catlevel2.strip(),
+            #     product_ID.strip(),
+            #     (str(result[0])).strip(),))
+            # self.operater.conn.commit()
+            return 1
+    def checkparent(self,category):
+        self.operater.cursor.execute('''select * from category_table where category=%s''',(category,))
+        result=self.operater.cursor.fetchone()
+        if result==None:
+            return 1
+        return 0
+        
     def verify_product(self, product_ID):
         self.operater.cursor.execute('''
-            select * from product where product_ID=%s''', (
+            select * from productinfo where product_ID=%s''', (
             product_ID.strip(),))
         result = self.operater.cursor.fetchone()
         if result:
@@ -142,14 +160,14 @@ class DB_Operations:
         return 0
 
     def update_title(self, product_ID, product_title):
-        self.operater.cursor.execute("update product set product_title=%s where product_ID=%s", (
+        self.operater.cursor.execute("update productinfo set product_title=%s where product_ID=%s", (
             product_title.strip(),
             product_ID.strip(),))
         self.operater.conn.commit()
         return 1
 
     def update_price(self, product_ID, product_price):
-        self.operater.cursor.execute("update product set product_price=%s where product_ID=%s", (
+        self.operater.cursor.execute("update productinfo set product_price=%s where product_ID=%s", (
             (str(product_price)).strip(),
             product_ID.strip(),))
         self.operater.conn.commit()
@@ -157,7 +175,7 @@ class DB_Operations:
 
     def update_description(self, product_ID, product_description):
         self.operater.cursor.execute('''
-            update product set product_description=%s where product_ID=%s''', (
+            update productinfo set product_description=%s where product_ID=%s''', (
             product_description.strip(),
             product_ID.strip(),))
         self.operater.conn.commit()
@@ -165,7 +183,7 @@ class DB_Operations:
 
     def update_image(self, product_ID, product_image):
         self.operater.cursor.execute('''
-            update product set product_image=%s where product_ID=%s''', (
+            update productinfo set product_image=%s where product_ID=%s''', (
             product_image.strip(),
             product_ID.strip(),))
         self.operater.conn.commit()
@@ -173,7 +191,7 @@ class DB_Operations:
 
     def update_availability(self, product_ID, product_availability):
         self.operater.cursor.execute('''
-            update product set product_availability=%s where product_ID=%s''', (
+            update productinfo set product_availability=%s where product_ID=%s''', (
             product_availability.strip(),
             product_ID.strip(),))
         self.operater.conn.commit()
@@ -181,7 +199,7 @@ class DB_Operations:
 
     def update_name(self, product_ID, product_name):
         self.operater.cursor.execute('''
-            update product set product_name=%s where product_ID=%s''', (
+            update productinfo set product_name=%s where product_ID=%s''', (
             product_name.strip(),
             product_ID.strip(),))
         self.operater.conn.commit()
@@ -195,7 +213,7 @@ class DB_Operations:
                     product_price,
                     product_description,
                     product_image
-                from product order by random() limit %s
+                from productinfo order by random() limit %s
             ''', (number,))
         else:
             self.operater.cursor.execute('''
@@ -204,28 +222,29 @@ class DB_Operations:
                     product_price,
                     product_description,
                     product_image
-                from product order by random()
+                from productinfo order by random()
             ''')
         result = self.operater.cursor.fetchall()
         final = []
         for i in result:
             final.append([i[0], i[1], i[2], i[3], i[4]])
         return final
-
+    #to change
     def get_catlevel1(self):
         self.operater.cursor.execute('''
-            select * from catlevel1
-        ''')
+            select category,id from category_table where level=%s
+        ''',(1,))
         result = self.operater.cursor.fetchall()
+        #print("result"result)
+
         final = {}
         for i in result:
             final[i[0]] = []
+            # print(type(i[1]))
             self.operater.cursor.execute(''' 
-                select catlevel2, count(*) as cnt
-                from catlevel2 where pid=%s
-                group by catlevel2
-                order by cnt desc
-            ''', str(i[1]))
+                select DISTINCT category
+                from category_table where parent_id=%s
+            ''', (i[1],))
             result_1 = self.operater.cursor.fetchall()
             for j in result_1:
                 if not self.check_whitespace(j[0]):

@@ -63,7 +63,7 @@ class Product_Search(Resource):
 
     def get(self):
         categories = self.operator.get_catlevel1()
-        rows = 10
+        rows = 20
         query = request.args.get('q')
         order = request.args.get('order')
         params = {
@@ -115,7 +115,9 @@ class DB_Ingest(Resource):
         self.operator = DB_Operations()
 
     def post(self):
+        
         data = request.json
+        
         for product in data:
             product_ID = product['uniqueId']
             product_title = product['title']

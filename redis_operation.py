@@ -32,5 +32,5 @@ class redis_operation():
             for j in i:
                 self.operator.redis.lpush(final,str(j))
         #print(self.operator.redis.lrange(final,0,-1))
-        return 1
+        return {"redis":"insertion successfull"}
         

@@ -31,21 +31,21 @@ def render_products():
     categories = response["categories"]
     return render_template("products.html", products=products, categories=categories)
 
-@app.route("/ingestion", methods={'POST', 'PUT'})
+@app.route("/ingestion/", methods={'POST', 'PUT'})
 def ingest_products():
     domain = config.get("backend", "URL")
     final_domain = domain + "/ingestion"
     if request.method == 'POST':
-        data = request.json()
+        data = request.json
         response = requests.post(url=final_domain, json=data)
         print(response)
-
+    
     elif request.method=="PUT":
-        product = request.json()
+        product = request.json
         for value in product:
             response = requests.put(url=final_domain, data=value)
             print(response)
-
+    
 @app.route("/products/<product_id>/")
 def render_product(product_id):
     domain = config.get("backend", "URL")
