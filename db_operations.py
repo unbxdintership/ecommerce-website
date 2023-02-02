@@ -11,7 +11,7 @@ class DB_Operations:
 
     def __init__(self):
         self.operater = DB_Initialise()
-        self.r = redis.Redis(host='localhost', port=6379)
+        self.r = redis.Redis(host='redis', port=6378)
 
     def check_whitespace(self, word):
         whitespaces = 0

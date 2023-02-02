@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request
 from configparser import ConfigParser
-from db_operations import DB_Operations
+#from db_operations import DB_Operations
 import requests
 
 
-operator = DB_Operations()
+#operator = DB_Operations()
 
 config = ConfigParser()
 config.read('config.ini')
@@ -30,9 +30,25 @@ def render_products():
     response = data.json()
     products = response["products"]
     categories = response["categories"]
-    pages = response['pages']
-    return render_template("products.html", products=products, categories=categories, page=page, pages=pages)
+    pages=response["pages"]
+    return render_template("products.html", products=products, pages=pages,page=page,categories=categories)
 
+@app.route("/ingestion/", methods={'POST', 'PUT'})
+def ingest_products():
+    domain = config.get("backend", "URL")
+    final_domain = domain + "/ingestion"
+    if request.method == 'POST':
+        data = request.json
+        response = requests.post(url=final_domain, json=data)
+        print(response)
+    
+    elif request.method=="PUT":
+        product = request.json
+        for value in product:
+            response = requests.put(url=final_domain, data=value)
+            print(response)
+    return response
+    return {"ingestion":"successfull"}
 @app.route("/products/<product_id>/")
 def render_product(product_id):
     domain = config.get("backend", "URL")
