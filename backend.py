@@ -3,12 +3,13 @@ from flask_restful import Api, Resource
 import configparser
 from db_operations import DB_Operations
 import requests
-import time
+import redis
 config = configparser.ConfigParser()
 config.read('config.ini')
 
 app = Flask(__name__)
 API = Api(app)
+# print("hellow world")
 
 
 class Home(Resource):
@@ -16,9 +17,11 @@ class Home(Resource):
         self.operator = DB_Operations()
 
     def get(self):
-        products = self.operator.get_random_products(9)
+        products = self.operator.get_random_products()
         categories = self.operator.get_catlevel1()
         return {"products": products, "categories": categories}
+
+
 API.add_resource(Home, "/home")
 
 
@@ -30,7 +33,11 @@ class DB_Retrieve_Product(Resource):
         product = self.retriever.get_product(product_ID)
         categories = self.retriever.get_catlevel1()
         return {"product": product, "categories": categories}
+
+
 API.add_resource(DB_Retrieve_Product, "/products/<string:product_ID>/")
+
+# curl "database/ingestion" -d @out.json -H "Content-Type: application/json"
 
 
 class DB_Retrieve_Random(Resource):
@@ -38,9 +45,20 @@ class DB_Retrieve_Random(Resource):
         self.retriever = DB_Operations()
 
     def get(self):
-        products = self.retriever.get_random_products()
+        page = int(request.args.get("page"))
+        all_products = self.retriever.get_random_products()
+        products_length = len(all_products)
+        pages = products_length//18
+        if (products_length % 18) != 0:
+            pages += 1
+        start, end = (page-1)*18, (page-1)*18+18
+        if end >= products_length:
+            end = products_length
+        products = all_products[start: end]
         categories = self.retriever.get_catlevel1()
-        return {"products": products, "categories": categories}
+        return {"products": products, "categories": categories, "pages": pages, "page": page}
+
+
 API.add_resource(DB_Retrieve_Random, "/products/")
 
 
@@ -49,10 +67,29 @@ class Product_Details(Resource):
         self.get_cat = DB_Operations()
 
     def get(self, category_lvl1, category_lvl2):
+        page = int(request.args.get("page"))
         categories = self.get_cat.get_catlevel1()
-        products = self.get_cat.get_category_lvl2_prods(
-            category_lvl1, category_lvl2)
-        return {"products": products, "categories": categories}
+        status = self.get_cat.get_redis_products(category_lvl1, category_lvl2)
+        if status == 1:
+            all_products = self.get_cat.get_category_lvl2_prods(
+                category_lvl1, category_lvl2)
+            status1 = self.get_cat.insert_redis_products(
+                category_lvl1, category_lvl2, all_products)
+            if status1 == 1:
+                print("Inserted into redis...")
+        else:
+            all_products = status
+        products_length = len(all_products)
+        pages = products_length//18
+        if (products_length % 18) != 0:
+            pages += 1
+        start, end = (page-1)*18, (page-1)*18+18
+        if end >= products_length:
+            end = products_length
+        products = all_products[start: end]
+        return {"products": products, "categories": categories, "pages": pages, "page": page}
+
+
 API.add_resource(Product_Details, "/category/<category_lvl1>/<category_lvl2>/")
 
 
@@ -62,51 +99,36 @@ class Product_Search(Resource):
         self.operator = DB_Operations()
 
     def get(self):
+        page = int(request.args.get("page"))
         categories = self.operator.get_catlevel1()
-        rows = 20
         query = request.args.get('q')
         order = request.args.get('order')
         params = {
-            "rows": rows,
             "q": query
         }
         if order == "Ascending":
             params["sort"] = "price asc"
         elif order == "Descending":
             params["sort"] = "price desc"
-        status = self.operator.get_redis_products(params)
-        if status == 1:
-            response = requests.get(self.URL, params)
-            products = response.json()
-            num_products = len(products["response"]["products"])
-            result = []
-            for counter in range(0, num_products):
-                result.append([
-                    products["response"]["products"][counter].get("uniqueId", ""),
-                    products["response"]["products"][counter].get("name", ""),
-                    products["response"]["products"][counter].get("price", ""),
-                    products["response"]["products"][counter].get("productDescription", ""),
-                    products["response"]["products"][counter].get("productImage", "")
-                ])
+        # status = self.operator.get_redis_products(params)
+        # if status == 1:
+        all_result = self.operator.get_search_products(query, order)
+        #     status1 = self.operator.insert_redis_products(params, all_result)
+        #     if status1 == 1:
+        #         print("Inserted into redis...")
+        # else:
+        #     all_result = status
+        products_length = len(all_result)
+        pages = products_length//18
+        if (products_length % 18) != 0:
+            pages += 1
+        start, end = (page-1)*18, (page-1)*18+18
+        if end >= products_length:
+            end = products_length
+        products = all_result[start: end]
+        return {"products": products, "categories": categories, "pages": pages, "page": page}
 
-                if self.operator.verify_product(products["response"]["products"][counter]["uniqueId"]) == 0:
-                    self.operator.insert_product(
-                        products["response"]["products"][counter].get("uniqueId", ""),
-                        products["response"]["products"][counter].get("title", ""),
-                        products["response"]["products"][counter].get("price", ""),
-                        products["response"]["products"][counter].get("productDescription", ""),
-                        products["response"]["products"][counter].get("productImage", ""),
-                        products["response"]["products"][counter].get("availability", ""),
-                        products["response"]["products"][counter].get("name", ""),
-                        products["response"]["products"][counter].get("catlevel1Name", ""),
-                        products["response"]["products"][counter].get("catlevel2Name", "")
-                    )
-            status1 = self.operator.insert_redis_products(params, result)
-            if status1 == 1:
-                print("Inserted into redis...")
-        else:
-            result = status
-        return {"products": result, "categories": categories}
+
 API.add_resource(Product_Search, "/search/")
 
 
@@ -115,9 +137,9 @@ class DB_Ingest(Resource):
         self.operator = DB_Operations()
 
     def post(self):
-        
+
         data = request.json
-        
+
         for product in data:
             product_ID = product['uniqueId']
             product_title = product['title']
@@ -154,7 +176,7 @@ class DB_Ingest(Resource):
         for value in product:
             if value.get("uniqueId") == None:
                 print("Product ID not mentioned.")
-                return {"Data Update": "Unsuccessful ❌"}
+                return {"Data Update": "Unsuccessful"}
             else:
                 product_ID = value.get("uniqueId")
 
@@ -162,7 +184,7 @@ class DB_Ingest(Resource):
             if not status:
                 print(
                     f"Product with ID: {product_ID} not present in the database.")
-                return {"Data Update": "Unsuccessful ❌"}
+                return {"Data Update": "Unsuccessful"}
 
             if value.get("title") != None:
                 self.operator.update_title(product_ID, value.get("title"))
@@ -193,7 +215,41 @@ class DB_Ingest(Resource):
 
             print(f"Updated product with ID: {product_ID}.\n  *****")
         return {"Data Update": "Successful"}
+
+
 API.add_resource(DB_Ingest, "/ingestion/")
+
+
+class REDISINSERT(Resource):
+    def __init__(self):
+        self.r = redis.Redis(host='redis', port=6378)
+
+    def get(self, key, value):
+        # data=request.json
+        # key=data['key']
+        # value=data['value']
+        try:
+            self.r.set(key, value)
+            return {"redis": "insertion successfull"}
+        except Exception as e:
+            print(e)
+            return {"redis": "insertion failed"}
+API.add_resource(REDISINSERT, "/redisinsert/<key>/<value>")
+
+class REDISGET(Resource):
+    def __init__(self):
+        self.r = redis.Redis(host='redis', port=6378)
+    def get(self, key):
+        try:
+            a = self.r.get(key)
+            return {key:a.decode()}
+        except Exception as e:
+            print(e)
+            return {"redis": "fetching failed"}
+
+
+API.add_resource(REDISGET, "/redisget/<key>")
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=3000)
