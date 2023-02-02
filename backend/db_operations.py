@@ -11,7 +11,7 @@ class DB_Operations:
 
     def __init__(self):
         self.operater = DB_Initialise()
-        self.r = redis.Redis(host='localhost', port=6379)
+        self.r = redis.Redis(host='redis', port=6379)
 
     def check_whitespace(self, word):
         whitespaces = 0
@@ -90,15 +90,15 @@ class DB_Operations:
     # to change-done
 
     def insert_product(self,
-                       product_ID,
-                       product_title,
-                       product_price,
-                       product_description,
-                       product_image,
-                       product_availability,
-                       product_name,
-                       product_catlevel1,
-                       product_catlevel2):
+                    product_ID,
+                    product_title,
+                    product_price,
+                    product_description,
+                    product_image,
+                    product_availability,
+                    product_name,
+                    product_catlevel1,
+                    product_catlevel2):
         if self.verify_product(product_ID):
             return 2
         else:
@@ -190,15 +190,25 @@ class DB_Operations:
         self.operater.conn.commit()
         return 1
 
-    def get_random_products(self):
-        self.operater.cursor.execute('''
-            select product_ID, 
-                product_name, 
-                product_price,
-                product_description,
-                product_image
-            from productinfo order by random()
-        ''')
+    def get_random_products(self, number=None):
+        if number == None:
+            self.operater.cursor.execute('''
+                select product_ID, 
+                    product_name, 
+                    product_price,
+                    product_description,
+                    product_image
+                from productinfo order by random()
+            ''')
+        else:
+            self.operater.cursor.execute('''
+                select product_ID, 
+                    product_name, 
+                    product_price,
+                    product_description,
+                    product_image
+                from productinfo order by random() limit %s
+            ''', (number,))
         result = self.operater.cursor.fetchall()
         final = []
         for i in result:

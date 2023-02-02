@@ -1,9 +1,14 @@
 FROM python
+
 WORKDIR /frontend
+
 COPY frontend.py /frontend
 COPY requirements.txt /frontend
-COPY static /frontend
-COPY templates /frontend
-RUN pip3 install -r requirements.txt 
+COPY /static /frontend/static
+COPY /templates /frontend/templates
+
+RUN pip3 install -r requirements.txt
+
 EXPOSE 5000
-CMD ["python3","frontend.py"]
+
+CMD ["python","frontend.py"]
