@@ -2,10 +2,11 @@ from flask import Flask, request
 from flask_restful import Api, Resource
 import configparser
 from db_operations import DB_Operations
-import requests
+import redis
+
 config = configparser.ConfigParser()
 config.read('config.ini')
-import redis
+
 app = Flask(__name__)
 API = Api(app)
 
@@ -15,10 +16,10 @@ class Home(Resource):
         self.operator = DB_Operations()
 
     def get(self):
-        products = self.operator.get_random_products()
+        products = self.operator.get_random_products(18)
         categories = self.operator.get_catlevel1()
         return {"products": products, "categories": categories}
-API.add_resource(Home, "/home")
+API.add_resource(Home, "/home/")
 
 
 class DB_Retrieve_Product(Resource):
@@ -41,10 +42,10 @@ class DB_Retrieve_Random(Resource):
         all_products = self.retriever.get_random_products()
         products_length = len(all_products)
         pages = products_length//18
-        if (products_length%18)!=0:
-            pages+=1
+        if (products_length % 18) != 0:
+            pages += 1
         start, end = (page-1)*18, (page-1)*18+18
-        if end>=products_length:
+        if end >= products_length:
             end = products_length
         products = all_products[start: end]
         categories = self.retriever.get_catlevel1()
@@ -63,17 +64,18 @@ class Product_Details(Resource):
         if status == 1:
             all_products = self.get_cat.get_category_lvl2_prods(
                 category_lvl1, category_lvl2)
-            status1 = self.get_cat.insert_redis_products(category_lvl1, category_lvl2, all_products)
+            status1 = self.get_cat.insert_redis_products(
+                category_lvl1, category_lvl2, all_products)
             if status1 == 1:
                 print("Inserted into redis...")
         else:
             all_products = status
         products_length = len(all_products)
         pages = products_length//18
-        if (products_length%18)!=0:
-            pages+=1
+        if (products_length % 18) != 0:
+            pages += 1
         start, end = (page-1)*18, (page-1)*18+18
-        if end>=products_length:
+        if end >= products_length:
             end = products_length
         products = all_products[start: end]
         return {"products": products, "categories": categories, "pages": pages, "page": page}
@@ -82,7 +84,7 @@ API.add_resource(Product_Details, "/category/<category_lvl1>/<category_lvl2>/")
 
 class Product_Search(Resource):
     def __init__(self):
-        self.URL = config.get('search_api', "URL")
+        self.URL = "https://search.unbxd.io/fb853e3332f2645fac9d71dc63e09ec1/demo-unbxd700181503576558/search"
         self.operator = DB_Operations()
 
     def get(self):
@@ -107,10 +109,10 @@ class Product_Search(Resource):
         #     all_result = status
         products_length = len(all_result)
         pages = products_length//18
-        if (products_length%18)!=0:
-            pages+=1
+        if (products_length % 18) != 0:
+            pages += 1
         start, end = (page-1)*18, (page-1)*18+18
-        if end>=products_length:
+        if end >= products_length:
             end = products_length
         products = all_result[start: end]
         return {"products": products, "categories": categories, "pages": pages, "page": page}
@@ -122,9 +124,9 @@ class DB_Ingest(Resource):
         self.operator = DB_Operations()
 
     def post(self):
-        
+
         data = request.json
-        
+
         for product in data:
             product_ID = product['uniqueId']
             product_title = product['title']
@@ -149,7 +151,6 @@ class DB_Ingest(Resource):
             )
             if ingestion_status == 2:
                 print(f"Product ID: {product_ID} already present.")
-                return {"Data Ingestion": "Unsuccessful"}
 
         if ingestion_status == 1:
             return {"Data Ingestion": "Successful"}
@@ -207,16 +208,13 @@ class REDISINSERT(Resource):
         self.r = redis.Redis(host='redis', port=6379)
 
     def get(self, key, value):
-        # data=request.json
-        # key=data['key']
-        # value=data['value']
         try:
             self.r.set(key, value)
             return {"redis": "insertion successfull"}
         except Exception as e:
             print(e)
             return {"redis": e}
-API.add_resource(REDISINSERT, "/redisinsert/<key>/<value>")
+API.add_resource(REDISINSERT, "/redisinsert/<key>/<value>/")
 
 class REDISGET(Resource):
     def __init__(self):
@@ -228,10 +226,12 @@ class REDISGET(Resource):
         except Exception as e:
             print(e)
             return {"redis": e}
+API.add_resource(REDISGET, "/redisget/<key>/")
 
-
-API.add_resource(REDISGET, "/redisget/<key>")
+class Testing(Resource):
+    def get(self):
+        return {"Testing": "Backend"}
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=3000,host='0.0.0.0')
+    app.run(debug=True, port=3000, host='0.0.0.0')

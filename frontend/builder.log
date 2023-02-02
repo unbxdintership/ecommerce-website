@@ -1,148 +1,133 @@
 #1 [internal] load build definition from Dockerfile
-#1 sha256:3c7fabafeeb18e5c4e168df1cbb1854412dd19593391bc20693fbb380841e0aa
-#1 transferring dockerfile: 296B done
+#1 sha256:297aaf53b40a72e29a70bd27488dc595df37d1e685048716b8dd67cda5ab90df
+#1 DONE 0.0s
+
+#1 [internal] load build definition from Dockerfile
+#1 sha256:297aaf53b40a72e29a70bd27488dc595df37d1e685048716b8dd67cda5ab90df
+#1 transferring dockerfile: 281B done
 #1 DONE 0.0s
 
 #2 [internal] load .dockerignore
-#2 sha256:b8635ebe0c1b09476d64b6768ba670e72e3586cd485d3184050e912165b68209
+#2 sha256:91125428cb4d01a405cf541ffa823a68c3554ab7cf92093363676bc1ed846a3e
 #2 transferring context: 2B done
 #2 DONE 0.0s
 
 #3 [internal] load metadata for docker.io/library/python:latest
-#3 sha256:25baba7cb1ff1faed5b407f213f787f42274cfec06d39ad674c6905f347a48f7
-#3 DONE 0.0s
+#3 sha256:5acef6d7a37826c160264f77a25645c338488c5503b5ae0fa44105d837e31bb4
+#3 DONE 1.0s
 
-#4 [1/7] FROM docker.io/library/python
-#4 sha256:65fb2585432088564f9c49d29ec8b6946867b4fad5a14f209f077aaf13853f3a
+#4 [1/7] FROM docker.io/library/python@sha256:6b85854518f812d94cf2dfee2386df85b9cb78835a872d4769b4335f584c43ba
+#4 sha256:f94d368d988732920d11cff88afac0c86a891c93257386baf7f231550ff53df8
 #4 DONE 0.0s
 
 #5 [2/7] WORKDIR /frontend
-#5 sha256:8e60e9e68a75a63b28269eb98023007d5ce68b3eaf7894dffe3156b3e25bee21
+#5 sha256:94787da0da4f5f1a7642aa62cdf9f07ab4473cd6e1c3177b2a579a71e88d6d94
 #5 CACHED
 
 #6 [internal] load build context
-#6 sha256:fc1cbd14e3c5f0f013eea1ef2f83fc4335b42754033a1fc820cbfd57ce192986
-#6 transferring context: 865.27kB 0.0s done
-#6 DONE 0.1s
+#6 sha256:ecd232ea15ad41d7e32290daabda18277e527702c0134eb2d0e38dfa5b9ac36e
+#6 transferring context: 2.36kB done
+#6 DONE 0.0s
 
 #7 [3/7] COPY frontend.py /frontend
-#7 sha256:b3da57cc427bdc0fe0f9259015e184d3d2cd46a1b2acb935b6f42df67c2174dd
+#7 sha256:9fb0cab35d94f07f70a0ce38434d81467f0af2fe3457f3fce8d51429123aeb8b
 #7 DONE 0.0s
 
 #8 [4/7] COPY requirements.txt /frontend
-#8 sha256:9679ea4d340aed17562102ea7f0cbb423e33b37436db7d9edde1f078744384b8
+#8 sha256:5a088373c173cce4eb4bc357be1ce8cde167c56fc5f95c8a4bdf198c8a6f666e
 #8 DONE 0.0s
 
-#9 [5/7] COPY static /frontend
-#9 sha256:d49d7a0bf404dde738855712c04f9c422fdc7722f8cbbde675543aafacd3fb86
+#9 [5/7] COPY /static /frontend/static
+#9 sha256:438a05b2e7914ba7aa0178b4fda5fc994f8765ffff5a6e0b3c4cfeef1fe1dd1e
 #9 DONE 0.0s
 
-#10 [6/7] COPY templates /frontend
-#10 sha256:11e9f151bc3f6838ec9107f4776b79e5268e48c62dfacc28d1ab92559dd26ea8
+#10 [6/7] COPY /templates /frontend/templates
+#10 sha256:92efe3a2be079b3de02bb136d8bd71be3ca7c371b143573b202c1fa8cd1cf4a4
 #10 DONE 0.0s
 
 #11 [7/7] RUN pip3 install -r requirements.txt
-#11 sha256:7a47d5a360465ba818b5224af829bdfcfc2d48559ab438a077bbe376c04bd7c0
-#11 2.278 Collecting aniso8601==9.0.1
-#11 2.446   Downloading aniso8601-9.0.1-py2.py3-none-any.whl (52 kB)
-#11 2.480      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 52.8/52.8 kB 10.1 MB/s eta 0:00:00
-#11 2.533 Collecting argcomplete==2.0.0
-#11 2.551   Downloading argcomplete-2.0.0-py2.py3-none-any.whl (37 kB)
-#11 2.588 Collecting async-timeout==4.0.2
-#11 2.607   Downloading async_timeout-4.0.2-py3-none-any.whl (5.8 kB)
-#11 2.652 Collecting certifi==2022.12.7
-#11 2.671   Downloading certifi-2022.12.7-py3-none-any.whl (155 kB)
-#11 2.689      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 155.3/155.3 kB 12.4 MB/s eta 0:00:00
-#11 2.792 Collecting charset-normalizer==2.1.1
-#11 2.810   Downloading charset_normalizer-2.1.1-py3-none-any.whl (39 kB)
-#11 2.859 Collecting click==8.1.3
-#11 2.878   Downloading click-8.1.3-py3-none-any.whl (96 kB)
-#11 2.885      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 96.6/96.6 kB 28.8 MB/s eta 0:00:00
-#11 2.926 Collecting colorama==0.4.6
-#11 2.944   Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
-#11 3.046 Collecting commitizen==2.39.1
-#11 3.064   Downloading commitizen-2.39.1-py3-none-any.whl (49 kB)
-#11 3.072      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 49.2/49.2 kB 9.0 MB/s eta 0:00:00
-#11 3.103 Collecting decli==0.5.2
-#11 3.124   Downloading decli-0.5.2-py3-none-any.whl (7.7 kB)
-#11 3.198 Collecting Flask==2.2.2
-#11 3.217   Downloading Flask-2.2.2-py3-none-any.whl (101 kB)
-#11 3.239      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 101.5/101.5 kB 5.3 MB/s eta 0:00:00
-#11 3.280 Collecting Flask-RESTful==0.3.9
-#11 3.300   Downloading Flask_RESTful-0.3.9-py2.py3-none-any.whl (25 kB)
-#11 3.337 Collecting idna==3.4
-#11 3.356   Downloading idna-3.4-py3-none-any.whl (61 kB)
-#11 3.364      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.5/61.5 kB 11.3 MB/s eta 0:00:00
-#11 3.440 Collecting importlib-metadata==6.0.0
-#11 3.459   Downloading importlib_metadata-6.0.0-py3-none-any.whl (21 kB)
-#11 3.501 Collecting itsdangerous==2.1.2
-#11 3.519   Downloading itsdangerous-2.1.2-py3-none-any.whl (15 kB)
-#11 3.564 Collecting Jinja2==3.1.2
-#11 3.585   Downloading Jinja2-3.1.2-py3-none-any.whl (133 kB)
-#11 3.596      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 133.1/133.1 kB 16.8 MB/s eta 0:00:00
-#11 3.694 Collecting MarkupSafe==2.1.1
-#11 3.715   Downloading MarkupSafe-2.1.1.tar.gz (18 kB)
-#11 3.736   Preparing metadata (setup.py): started
-#11 4.397   Preparing metadata (setup.py): finished with status 'done'
-#11 4.440 Collecting packaging==23.0
-#11 4.457   Downloading packaging-23.0-py3-none-any.whl (42 kB)
-#11 4.463      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 42.7/42.7 kB 11.6 MB/s eta 0:00:00
-#11 4.543 Collecting prompt-toolkit==3.0.36
-#11 4.559   Downloading prompt_toolkit-3.0.36-py3-none-any.whl (386 kB)
-#11 4.586      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 386.4/386.4 kB 18.2 MB/s eta 0:00:00
-#11 4.754 Collecting psycopg2-binary==2.9.5
-#11 4.794   Downloading psycopg2_binary-2.9.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
-#11 4.894      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 38.3 MB/s eta 0:00:00
-#11 5.030 Collecting pytz==2022.7.1
-#11 5.048   Downloading pytz-2022.7.1-py2.py3-none-any.whl (499 kB)
-#11 5.080      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 499.4/499.4 kB 17.3 MB/s eta 0:00:00
-#11 5.179 Collecting PyYAML==6.0
-#11 5.210   Downloading PyYAML-6.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (757 kB)
-#11 5.237      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 757.9/757.9 kB 35.8 MB/s eta 0:00:00
-#11 5.279 Collecting questionary==1.10.0
-#11 5.304   Downloading questionary-1.10.0-py3-none-any.whl (31 kB)
-#11 5.397 Collecting redis==4.4.2
-#11 5.416   Downloading redis-4.4.2-py3-none-any.whl (237 kB)
-#11 5.451      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 237.8/237.8 kB 15.3 MB/s eta 0:00:00
-#11 5.618 Collecting requests==2.28.2
-#11 5.638   Downloading requests-2.28.2-py3-none-any.whl (62 kB)
-#11 5.650      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.8/62.8 kB 15.7 MB/s eta 0:00:00
-#11 5.688 Collecting termcolor==2.2.0
-#11 5.713   Downloading termcolor-2.2.0-py3-none-any.whl (6.6 kB)
-#11 5.795 Collecting tomlkit==0.11.6
-#11 5.816   Downloading tomlkit-0.11.6-py3-none-any.whl (35 kB)
-#11 5.881 Collecting typing_extensions==4.4.0
-#11 5.903   Downloading typing_extensions-4.4.0-py3-none-any.whl (26 kB)
-#11 6.015 Collecting urllib3==1.26.14
-#11 6.045   Downloading urllib3-1.26.14-py2.py3-none-any.whl (140 kB)
-#11 6.102      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 140.6/140.6 kB 2.5 MB/s eta 0:00:00
-#11 6.148 Collecting wcwidth==0.2.6
-#11 6.166   Downloading wcwidth-0.2.6-py2.py3-none-any.whl (29 kB)
-#11 6.233 Collecting Werkzeug==2.2.2
-#11 6.253   Downloading Werkzeug-2.2.2-py3-none-any.whl (232 kB)
-#11 6.267      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 232.7/232.7 kB 27.1 MB/s eta 0:00:00
-#11 6.421 Collecting zipp==3.11.0
-#11 6.440   Downloading zipp-3.11.0-py3-none-any.whl (6.6 kB)
-#11 6.591 Collecting six>=1.3.0
-#11 6.608   Downloading six-1.16.0-py2.py3-none-any.whl (11 kB)
-#11 6.834 Building wheels for collected packages: MarkupSafe
-#11 6.835   Building wheel for MarkupSafe (setup.py): started
-#11 7.519   Building wheel for MarkupSafe (setup.py): finished with status 'done'
-#11 7.520   Created wheel for MarkupSafe: filename=MarkupSafe-2.1.1-cp311-cp311-linux_x86_64.whl size=27475 sha256=a752d20a1375c5c37a2f06ce3fb030134636f1f8f4b4de47f5fbc08e215eb0ce
-#11 7.520   Stored in directory: /root/.cache/pip/wheels/96/ee/62/407c247ad088bcb67b530ba3ac1479058c58a651bd6bf09a1f
-#11 7.522 Successfully built MarkupSafe
-#11 7.708 Installing collected packages: wcwidth, pytz, aniso8601, zipp, urllib3, typing_extensions, tomlkit, termcolor, six, PyYAML, psycopg2-binary, prompt-toolkit, packaging, MarkupSafe, itsdangerous, idna, decli, colorama, click, charset-normalizer, certifi, async-timeout, argcomplete, Werkzeug, requests, redis, questionary, Jinja2, importlib-metadata, Flask, commitizen, Flask-RESTful
-#11 9.631 Successfully installed Flask-2.2.2 Flask-RESTful-0.3.9 Jinja2-3.1.2 MarkupSafe-2.1.1 PyYAML-6.0 Werkzeug-2.2.2 aniso8601-9.0.1 argcomplete-2.0.0 async-timeout-4.0.2 certifi-2022.12.7 charset-normalizer-2.1.1 click-8.1.3 colorama-0.4.6 commitizen-2.39.1 decli-0.5.2 idna-3.4 importlib-metadata-6.0.0 itsdangerous-2.1.2 packaging-23.0 prompt-toolkit-3.0.36 psycopg2-binary-2.9.5 pytz-2022.7.1 questionary-1.10.0 redis-4.4.2 requests-2.28.2 six-1.16.0 termcolor-2.2.0 tomlkit-0.11.6 typing_extensions-4.4.0 urllib3-1.26.14 wcwidth-0.2.6 zipp-3.11.0
-#11 9.632 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
-#11 9.814 
-#11 9.814 [notice] A new release of pip available: 22.3.1 -> 23.0
-#11 9.814 [notice] To update, run: pip install --upgrade pip
-#11 DONE 10.3s
+#11 sha256:6d20585b04a2478fbb1fa11e301b6e01a2eb62fa8967367ee42f592082602838
+#11 1.005 Collecting aniso8601==9.0.1
+#11 1.215   Downloading aniso8601-9.0.1-py2.py3-none-any.whl (52 kB)
+#11 1.234      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 52.8/52.8 kB 2.5 MB/s eta 0:00:00
+#11 1.262 Collecting async-timeout==4.0.2
+#11 1.282   Downloading async_timeout-4.0.2-py3-none-any.whl (5.8 kB)
+#11 1.314 Collecting autopep8==2.0.1
+#11 1.333   Downloading autopep8-2.0.1-py2.py3-none-any.whl (45 kB)
+#11 1.339      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.0/45.0 kB 8.4 MB/s eta 0:00:00
+#11 1.370 Collecting certifi==2022.12.7
+#11 1.390   Downloading certifi-2022.12.7-py3-none-any.whl (155 kB)
+#11 1.409      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 155.3/155.3 kB 8.2 MB/s eta 0:00:00
+#11 1.480 Collecting charset-normalizer==3.0.1
+#11 1.505   Downloading charset_normalizer-3.0.1-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (193 kB)
+#11 1.512      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 193.3/193.3 kB 29.8 MB/s eta 0:00:00
+#11 1.544 Collecting click==8.1.3
+#11 1.567   Downloading click-8.1.3-py3-none-any.whl (96 kB)
+#11 1.570      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 96.6/96.6 kB 40.6 MB/s eta 0:00:00
+#11 1.599 Collecting Flask==2.2.2
+#11 1.617   Downloading Flask-2.2.2-py3-none-any.whl (101 kB)
+#11 1.620      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 101.5/101.5 kB 43.2 MB/s eta 0:00:00
+#11 1.648 Collecting Flask-RESTful==0.3.9
+#11 1.678   Downloading Flask_RESTful-0.3.9-py2.py3-none-any.whl (25 kB)
+#11 1.706 Collecting idna==3.4
+#11 1.723   Downloading idna-3.4-py3-none-any.whl (61 kB)
+#11 1.727      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.5/61.5 kB 20.5 MB/s eta 0:00:00
+#11 1.777 Collecting importlib-metadata==6.0.0
+#11 1.795   Downloading importlib_metadata-6.0.0-py3-none-any.whl (21 kB)
+#11 1.832 Collecting itsdangerous==2.1.2
+#11 1.855   Downloading itsdangerous-2.1.2-py3-none-any.whl (15 kB)
+#11 1.886 Collecting Jinja2==3.1.2
+#11 1.902   Downloading Jinja2-3.1.2-py3-none-any.whl (133 kB)
+#11 1.908      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 133.1/133.1 kB 31.7 MB/s eta 0:00:00
+#11 1.956 Collecting MarkupSafe==2.1.1
+#11 1.979   Downloading MarkupSafe-2.1.1.tar.gz (18 kB)
+#11 1.987   Preparing metadata (setup.py): started
+#11 2.262   Preparing metadata (setup.py): finished with status 'done'
+#11 2.326 Collecting psycopg2-binary==2.9.5
+#11 2.345   Downloading psycopg2_binary-2.9.5-cp311-cp311-manylinux_2_24_aarch64.whl (3.4 MB)
+#11 2.480      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.4/3.4 MB 25.2 MB/s eta 0:00:00
+#11 2.511 Collecting pycodestyle==2.10.0
+#11 2.536   Downloading pycodestyle-2.10.0-py2.py3-none-any.whl (41 kB)
+#11 2.539      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 41.3/41.3 kB 19.0 MB/s eta 0:00:00
+#11 2.590 Collecting pytz==2022.7.1
+#11 2.608   Downloading pytz-2022.7.1-py2.py3-none-any.whl (499 kB)
+#11 2.622      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 499.4/499.4 kB 38.9 MB/s eta 0:00:00
+#11 2.656 Collecting redis==4.4.2
+#11 2.678   Downloading redis-4.4.2-py3-none-any.whl (237 kB)
+#11 2.683      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 237.8/237.8 kB 58.0 MB/s eta 0:00:00
+#11 2.719 Collecting requests==2.28.2
+#11 2.738   Downloading requests-2.28.2-py3-none-any.whl (62 kB)
+#11 2.741      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.8/62.8 kB 26.0 MB/s eta 0:00:00
+#11 2.766 Collecting tomli==2.0.1
+#11 2.786   Downloading tomli-2.0.1-py3-none-any.whl (12 kB)
+#11 2.827 Collecting urllib3==1.26.14
+#11 2.843   Downloading urllib3-1.26.14-py2.py3-none-any.whl (140 kB)
+#11 2.849      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 140.6/140.6 kB 32.6 MB/s eta 0:00:00
+#11 2.882 Collecting Werkzeug==2.2.2
+#11 2.899   Downloading Werkzeug-2.2.2-py3-none-any.whl (232 kB)
+#11 2.904      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 232.7/232.7 kB 54.3 MB/s eta 0:00:00
+#11 2.930 Collecting zipp==3.11.0
+#11 2.948   Downloading zipp-3.11.0-py3-none-any.whl (6.6 kB)
+#11 2.993 Collecting six>=1.3.0
+#11 3.012   Downloading six-1.16.0-py2.py3-none-any.whl (11 kB)
+#11 3.082 Building wheels for collected packages: MarkupSafe
+#11 3.083   Building wheel for MarkupSafe (setup.py): started
+#11 3.438   Building wheel for MarkupSafe (setup.py): finished with status 'done'
+#11 3.438   Created wheel for MarkupSafe: filename=MarkupSafe-2.1.1-cp311-cp311-linux_aarch64.whl size=27878 sha256=ee834fcd16efac5f859caeda91dabb8df0bd98225724a0a592cf4dc7a3456cb9
+#11 3.438   Stored in directory: /root/.cache/pip/wheels/96/ee/62/407c247ad088bcb67b530ba3ac1479058c58a651bd6bf09a1f
+#11 3.439 Successfully built MarkupSafe
+#11 3.500 Installing collected packages: pytz, charset-normalizer, aniso8601, zipp, urllib3, tomli, six, pycodestyle, psycopg2-binary, MarkupSafe, itsdangerous, idna, click, certifi, async-timeout, Werkzeug, requests, redis, Jinja2, importlib-metadata, autopep8, Flask, Flask-RESTful
+#11 4.243 Successfully installed Flask-2.2.2 Flask-RESTful-0.3.9 Jinja2-3.1.2 MarkupSafe-2.1.1 Werkzeug-2.2.2 aniso8601-9.0.1 async-timeout-4.0.2 autopep8-2.0.1 certifi-2022.12.7 charset-normalizer-3.0.1 click-8.1.3 idna-3.4 importlib-metadata-6.0.0 itsdangerous-2.1.2 psycopg2-binary-2.9.5 pycodestyle-2.10.0 pytz-2022.7.1 redis-4.4.2 requests-2.28.2 six-1.16.0 tomli-2.0.1 urllib3-1.26.14 zipp-3.11.0
+#11 4.243 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#11 4.345 
+#11 4.345 [notice] A new release of pip available: 22.3.1 -> 23.0
+#11 4.345 [notice] To update, run: pip install --upgrade pip
+#11 DONE 4.5s
 
 #12 exporting to image
 #12 sha256:e8c613e07b0b7ff33893b694f7759a10d42e180f2b4dc349fb57dc6b71dcab00
 #12 exporting layers
-#12 exporting layers 0.7s done
-#12 writing image sha256:747b039ab4a630c1370ede3d37c7d68daf32209638fa5815f94af620c47a72ed done
+#12 exporting layers 0.2s done
+#12 writing image sha256:f41ef1e2ede303939370893772daa0a0440596213529144e3977a2a7cd1d6b0d done
 #12 naming to docker.io/library/frontend_docker done
-#12 DONE 0.8s
+#12 DONE 0.2s
