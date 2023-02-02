@@ -1,15 +1,4 @@
-/config
-/scripts
-/static
-/templates
-backend.py
 config.ini
-db_initialise.py
-db_operations.py
-Dockerfile
-frontend.py
-out.json
-redis_initialise.py
-redis_operation.py
-redistest.py
 update.json
+out.json
+/config
