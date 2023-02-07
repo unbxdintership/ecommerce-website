@@ -1,8 +1,5 @@
-config.ini
-update.json
-out.json
-demo.py
-dump.rdb
 /backend/builder.log
 /frontend/builder.log
-/config
+out.json
+update.json
+/frontend/nginx.conf

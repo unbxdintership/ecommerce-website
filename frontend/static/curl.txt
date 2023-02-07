@@ -1,8 +1,0 @@
-curl http://127.0.0.1:3000/ingestion/ -d @out.json -H "Content-Type: application/json"
-curl -X PUT http://127.0.0.1:5000/ingestion -d @update.json -H "Content-Type: application/json"
-curl http://127.0.0.1:5000/product/01705319
-curl http://127.0.0.1:5000/category/men
-curl https://search.unbxd.io/fb853e3332f2645fac9d71dc63e09ec1/demo-unbxd700181503576558/search?q=red%20shirt
-curl http://127.0.0.1:5000/search/red%20shirt
-curl http://127.0.0.1:5000/dsort/red%20shirt
-curl http://127.0.0.1:5000/asort/red%20shirt
