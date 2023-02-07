@@ -1,14 +1,9 @@
-FROM python
+FROM nginx:alpine
 
-WORKDIR /frontend
-
-COPY frontend.py /frontend
-COPY requirements.txt /frontend
-COPY /static /frontend/static
-COPY /templates /frontend/templates
-
-RUN pip3 install -r requirements.txt
+COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY ./*.html /usr/share/nginx/html/
+COPY ./*.css /usr/share/nginx/html/
+COPY ./*.png /usr/share/nginx/html/
+COPY ./*.js /usr/share/nginx/html/
 
 EXPOSE 5000
-
-CMD ["python","frontend.py"]
