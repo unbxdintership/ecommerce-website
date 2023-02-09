@@ -2,4 +2,7 @@
 /frontend/builder.log
 out.json
 update.json
-/frontend/nginx.conf
+/config
+/.vscode
+demo.py
+curl.txt

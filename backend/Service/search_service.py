@@ -35,6 +35,7 @@ class SearchService:
             ])
 
             if self.ing.verify_product(products["response"]["products"][counter]["uniqueId"]) == 0:
+
                 self.ing.insert_product(
                     products["response"]["products"][counter].get(
                         "uniqueId", ""),
@@ -52,4 +53,16 @@ class SearchService:
                     products["response"]["products"][counter].get(
                         "catlevel2Name", "")
                 )
+                # product_info = {}
+                # product_info['product_ID'] = products["response"]["products"][counter].get("uniqueId", ""),
+                # product_info['product_title'] = products["response"]["products"][counter].get("title", ""),
+                # product_info['product_price'] = products["response"]["products"][counter].get("price", ""),
+                # product_info['product_description'] = products["response"]["products"][counter].get("productDescription", ""),
+                # product_info['product_image'] = products["response"]["products"][counter].get("productImage", ""),
+                # product_info['product_availability'] = products["response"]["products"][counter].get("availability", ""),
+                # product_info['product_name'] = products["response"]["products"][counter].get("name", ""),
+                # product_info['product_catlevel1'] = products["response"]["products"][counter].get("catlevel1Name", ""),
+                # product_info['product_catlevel2'] = products["response"]["products"][counter].get("catlevel2Name", "")
+                # res = self.ing.insert_product(product_info)
+                # print(res)
         return result

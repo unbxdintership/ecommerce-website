@@ -7,9 +7,7 @@ class IngestCntrl(Resource):
         self.operator = IngestService()
 
     def post(self):
-
         data = request.json
-
         for product in data:
             product_ID = product['uniqueId']
             product_title = product['title']
@@ -20,6 +18,18 @@ class IngestCntrl(Resource):
             product_name = product['name']
             product_catlevel1 = product['catlevel1Name']
             product_catlevel2 = product.get('catlevel2Name', "")
+
+            # product_info = {
+            #     "product_ID": product['uniqueId'],
+            #     "product_title": product['title'],
+            #     "product_price": product['price'],
+            #     "product_description" : product.get('productDescription', ""),
+            #     "product_image" : product['productImage'],
+            #     "product_availability" : product['availability'],
+            #     "product_name" : product['name'],
+            #     "product_catlevel1" : product['catlevel1Name'],
+            #     "product_catlevel2" : product.get('catlevel2Name', ""),
+            # }
 
             ingestion_status = self.operator.insert_product(
                 product_ID,
@@ -32,8 +42,9 @@ class IngestCntrl(Resource):
                 product_catlevel1,
                 product_catlevel2
             )
+            # ingestion_status = self.operator.insert_product(product_info)
             if ingestion_status == 2:
-                print(f"Product ID: {product_ID} already present.")
+                print(f"Product ID: {product['uniqueId']} already present.")
 
         if ingestion_status == 1:
             return {"Data Ingestion": "Successful"}

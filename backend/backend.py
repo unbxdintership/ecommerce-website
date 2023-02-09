@@ -8,10 +8,13 @@ from Controller.product_details_cntrl import ProductDetailsCntrl
 from Controller.category_cntrl import CategoryCntrl
 from Controller.search_cntrl import SearchCntrl
 from Controller.ingest_cntrl import IngestCntrl
+from DAO.db_object import PostgresDB
 
 app = Flask(__name__)
 API = Api(app)
 CORS(app)
+
+PostgresDB().create_database()
 
 API.add_resource(HeaderCntrl, "/")
 API.add_resource(HomeCntrl, "/home/")
