@@ -1,11 +1,11 @@
 from DAO.db_object import PostgresDB
+from Service.db_queries import get_all_cat
 
 
 class MiscService:
 
     def __init__(self):
         self.dboperator = PostgresDB()
-        self.dboperator.create_database()
 
     def check_whitespace(self, word):
         whitespaces = 0
@@ -18,10 +18,12 @@ class MiscService:
             return 0
 
     def check_parent(self, category):
-        self.dboperator.cursor.execute(
-            '''select * from category_table where category=%s''', (category,))
-        result = self.dboperator.cursor.fetchone()
-        if result == None:
+        # self.dboperator.cursor.execute(
+        #     '''select * from category_table where category=%s''', (category,))
+        # result = self.dboperator.cursor.fetchone()
+        result = self.dboperator.operation(get_all_cat, (category, ), res=1)
+        # result = response
+        if len(result)==0:
             return 1
         return 0
 

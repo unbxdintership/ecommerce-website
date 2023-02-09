@@ -1,6 +1,5 @@
 import psycopg2
 
-
 class PostgresDB:
 
     def __init__(self):
@@ -33,3 +32,13 @@ class PostgresDB:
         self.conn.commit()
         self.conn.close()
         print("Connection closed.")
+
+    def operation(self, operation, params=None, res=None):
+        if params!=None:
+            self.cursor.execute(operation, params)
+            self.conn.commit()
+        else:
+            self.cursor.execute(operation)
+        if res==1:
+            result = self.cursor.fetchall()
+            return result
