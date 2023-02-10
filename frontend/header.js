@@ -55,19 +55,19 @@ async function navbar() {
     searchbar_form.autocomplete = "off";
     products_li.before(searchbar_form);
 
-    var searchbar_select = document.createElement("select");
-    searchbar_select.classList.add("sort-select");
-    searchbar_select.name = "sort-select";
-    searchbar_select.id = "sort-select";
-    searchbar_form.appendChild(searchbar_select);
+    // var searchbar_select = document.createElement("select");
+    // searchbar_select.classList.add("sort-select");
+    // searchbar_select.name = "sort-select";
+    // searchbar_select.id = "sort-select";
+    // searchbar_form.appendChild(searchbar_select);
 
-    var options_list = ['None', 'Ascending', 'Descending', 'Relevance']
-    for (let option in options_list) {
-        var opt_option = document.createElement("option");
-        opt_option.value = options_list[option];
-        opt_option.innerHTML = options_list[option];
-        searchbar_select.appendChild(opt_option);
-    }
+    // var options_list = ['None', 'Ascending', 'Descending', 'Relevance']
+    // for (let option in options_list) {
+    //     var opt_option = document.createElement("option");
+    //     opt_option.value = options_list[option];
+    //     opt_option.innerHTML = options_list[option];
+    //     searchbar_select.appendChild(opt_option);
+    // }
 
     var searchbar_input = document.createElement("input");
     searchbar_input.type = "text";

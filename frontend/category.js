@@ -9,6 +9,57 @@ async function render_products() {
     var page = urlParams.get('page');
 
     var content_container = document.getElementById("content-container");
+
+
+
+
+    // var diff_searchbar_form = document.createElement("form");
+    // diff_searchbar_form.action = `./category.html`;
+    // diff_searchbar_form.method = "get";
+    // diff_searchbar_form.classList.add("diff_form_search");
+    // diff_searchbar_form.autocomplete = "off";
+    // content_container.appendChild(diff_searchbar_form);
+
+    // var diff_searchbar_select = document.createElement("select");
+    // diff_searchbar_select.classList.add("diff_sort_select");
+    // diff_searchbar_select.name = "diff_sort_select";
+    // diff_searchbar_select.id = "diff_sort_select";
+    // diff_searchbar_form.appendChild(diff_searchbar_select);
+
+    // var diff_options_list = ['None', 'Ascending', 'Descending']//, 'Relevance']
+    // for (let option in diff_options_list) {
+    //     var diff_opt_option = document.createElement("option");
+    //     diff_opt_option.value = diff_options_list[option];
+    //     diff_opt_option.innerHTML = diff_options_list[option];
+    //     diff_searchbar_select.appendChild(diff_opt_option);
+    // }
+    // var diff_hidden_catlvl1 = document.createElement("input")
+    // diff_hidden_catlvl1.type = "hidden";
+    // diff_hidden_catlvl1.name = "catlvl1";
+    // diff_hidden_catlvl1.value = catlvl1;
+    // diff_searchbar_form.appendChild(diff_hidden_catlvl1);
+
+    // var diff_hidden_catlvl2 = document.createElement("input");
+    // diff_hidden_catlvl2.type = "hidden";
+    // diff_hidden_catlvl2.name = "catlvl2";
+    // diff_hidden_catlvl2.value = catlvl2;
+    // diff_searchbar_form.appendChild(diff_hidden_catlvl2);
+
+    // var diff_hidden_page = document.createElement("input");
+    // diff_hidden_page.type = "hidden";
+    // diff_hidden_page.name = "page"
+    // diff_hidden_page.value = "1"
+    // diff_searchbar_form.appendChild(diff_hidden_page)
+
+
+
+    // var diff_btn_submit = document.createElement("button");
+    // diff_btn_submit.type = "submit";
+    // diff_btn_submit.classList.add("btn");
+    // diff_btn_submit.innerHTML = "submit";
+    // diff_searchbar_form.appendChild(diff_btn_submit);
+
+
     const URL = `http://localhost:3000/category?catlvl1=${catlvl1}&catlvl2=${catlvl2}&page=${page}`
     let response = await fetch(URL, {
         method: 'GET',
@@ -21,9 +72,12 @@ async function render_products() {
     });
     var result = await response.json();
     var keys = Object.keys(result);
+
+
+
     if (keys.includes("products")) {
-        catlvl1 = catlvl1.replaceAll('amp', "&").replaceAll('space', " ");
-        catlvl2 = catlvl2.replaceAll('amp', "&").replaceAll('space', " ");
+        var catlvl1_mod = catlvl1.replaceAll('amp', "&").replaceAll('space', " ");
+        var catlvl2_mod = catlvl2.replaceAll('amp', "&").replaceAll('space', " ");
         var products = result['products'];
         var page = result['page'];
         var pages = result['pages'];
@@ -34,14 +88,62 @@ async function render_products() {
 
         var products_container_title = document.createElement("h2");
         products_container_title.classList.add("title");
-        products_container_title.innerHTML = `${catlvl1}-${catlvl2} Products`;
+        products_container_title.innerHTML = `${catlvl1_mod}-${catlvl2_mod} Products`;
         products_container.appendChild(products_container_title);
+
+        //extra starts here
+        var diff_searchbar_form = document.createElement("form");
+        diff_searchbar_form.action = `./sortcategory.html`;
+        diff_searchbar_form.method = "get";
+        diff_searchbar_form.classList.add("diff_form_search");
+        diff_searchbar_form.autocomplete = "off";
+        products_container.appendChild(diff_searchbar_form);
+
+        var diff_searchbar_select = document.createElement("select");
+        diff_searchbar_select.classList.add("diff_sort_select");
+        diff_searchbar_select.name = "diff_sort_select";
+        diff_searchbar_select.id = "diff_sort_select";
+        diff_searchbar_form.appendChild(diff_searchbar_select);
+
+        var diff_options_list = ['None', 'Ascending', 'Descending']//, 'Relevance']
+        for (let option in diff_options_list) {
+            var diff_opt_option = document.createElement("option");
+            diff_opt_option.value = diff_options_list[option];
+            diff_opt_option.innerHTML = diff_options_list[option];
+            diff_searchbar_select.appendChild(diff_opt_option);
+        }
+
+        var diff_hidden_catlvl1 = document.createElement("input")
+        diff_hidden_catlvl1.type = "hidden";
+        diff_hidden_catlvl1.name = "catlvl1";
+        diff_hidden_catlvl1.value = catlvl1
+        diff_searchbar_form.appendChild(diff_hidden_catlvl1)
+
+        var diff_hidden_catlvl2 = document.createElement("input")
+        diff_hidden_catlvl2.type = "hidden";
+        diff_hidden_catlvl2.name = "catlvl2";
+        diff_hidden_catlvl2.value = catlvl2
+        diff_searchbar_form.appendChild(diff_hidden_catlvl2)
+
+        var diff_hidden_page = document.createElement("input")
+        diff_hidden_page.type = "hidden"
+        diff_hidden_page.name = "page"
+        diff_hidden_page.value = 1
+        diff_searchbar_form.appendChild(diff_hidden_page)
+
+        var diff_btn_submit = document.createElement("button")
+        diff_btn_submit.type = "submit"
+        diff_btn_submit.classList.add("btn")
+        diff_btn_submit.innerHTML = "submit"
+        diff_searchbar_form.appendChild(diff_btn_submit)
+        // extra ends here
 
         var products_grid = document.createElement("div");
         products_grid.classList.add("product-grid");
         products_container.appendChild(products_grid);
 
         for (let product in products) {
+            console.log(products[product])
             var product_wrapper = document.createElement("a");
             product_wrapper.href = `./product-details.html?product_id=${products[product][0]}`;
             product_wrapper.classList.add("product-link");
