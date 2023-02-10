@@ -2,28 +2,47 @@ import { navbar } from "./header.js";
 
 async function render_products() {
     var content_container = document.getElementById("content-container");
-
+    console.log("helloooooooo")
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
+    // console.log(urlParams)
+    // var diff_order = urlParams.get('diff_sort_select')
+    // console.log("diff order",diff_order)
+    // var queries = urlParams.get("searchbar").replaceAll(" ", "space").replaceAll("&", "amp");
+    // console.log(queries)
+    // try {
+    //     var diff_order = urlParams.get('diff-sort-select')
+    //     console.log(diff_order)
+    //     // var query = urlParams.get("searchbar").replaceAll(" ", "space").replaceAll("&", "amp");
+    //     // var order = urlParams.get('sort-select');
+
+    // }
+    // catch(err) {
+    //     console.log(err);
+    //     var query = urlParams.get("q");
+    //     var order = urlParams.get("order");
+    // }
+    // var page = urlParams.get('page');
+    // if (page == null) {
+    //     page = "1";
+    // }
+
+    var query;
+    var order;
+    var page;
 
     try {
-        var query = urlParams.get("searchbar").replaceAll(" ", "space").replaceAll("&", "amp");
-        var order = urlParams.get('sort-select');
-        console.log("it is working in search")
-        console.log(order)
-        // var diff_order = urlParams.get('diff-sort-select')
-        // console.log(diff_order)
+        query = urlParams.get("q").replaceAll('&', "amp").replaceAll(' ', "space");
+        order = urlParams.get("diff_sort_select");
+        page = urlParams.get("page")
     }
     catch (err) {
         console.log(err);
-        var query = urlParams.get("q");
+        var query = urlParams.get("q").replaceAll('&', "amp").replaceAll(' ', "space");
         var order = urlParams.get("order");
     }
-    var page = urlParams.get('page');
-    if (page == null) {
-        page = "1";
-    }
-
+    console.log(query, order, page)
+    console.log("edited working")
     const URL = `http://localhost:3000/search?q=${query}&order=${order}&page=${page}`
     let response = await fetch(URL, {
         method: 'GET',
@@ -56,7 +75,7 @@ async function render_products() {
         products_container_title.innerHTML = `${query} Products`;
         products_container.appendChild(products_container_title);
 
-        // different sort starts from here
+        //different sort starts here
         var diff_searchbar_form = document.createElement("form");
         diff_searchbar_form.action = `./sort.html`;
 
@@ -72,6 +91,11 @@ async function render_products() {
         diff_searchbar_select.id = "diff_sort_select";
         //diff_searchbar_select.onchange="this.form.submit()"
         diff_searchbar_form.appendChild(diff_searchbar_select);
+
+        // function() {
+        //     var e = document.getElementById('sort-select')
+        //     var text = e.options[e.selectedIndex].text;
+        //     window.location.replace(`http://localhost:5000/sort.html?q=${query}&order=${text}
 
         var diff_options_list = ['None', 'Ascending', 'Descending']//, 'Relevance']
         for (let option in diff_options_list) {
@@ -98,7 +122,6 @@ async function render_products() {
         diff_btn_submit.classList.add("btn")
         diff_btn_submit.innerHTML = "submit"
         diff_searchbar_form.appendChild(diff_btn_submit)
-
         //different sort ends here
 
         var products_grid = document.createElement("div");
@@ -140,34 +163,34 @@ async function render_products() {
 
         if (page != 1) {
             var previous_button = document.createElement("a");
-            previous_button.href = `./search.html?q=${query}&order=${order}&page=${page - 1}`;  // to be changed
+            previous_button.href = `./search.html?q=${query}&order=${order}&page=${page - 1}&diff_sort_select=${order}`;  // to be changed
             previous_button.classList.add("btn-not-active");
             previous_button.innerHTML = "<b>&laquo;</b>";
             pagination_buttons.appendChild(previous_button);
         }
         if (page - 1 != 0) {
             var previous_button_number = document.createElement("a");
-            previous_button_number.href = `./search.html?q=${query}&order=${order}&page=${page - 1}`; // to be changed
+            previous_button_number.href = `./search.html?q=${query}&order=${order}&page=${page - 1}&diff_sort_select=${order}`; // to be changed
             previous_button_number.classList.add("btn-not-active");
             previous_button_number.innerHTML = page - 1;
             pagination_buttons.appendChild(previous_button_number);
         }
         var current_button = document.createElement("a");
-        current_button.href = `./search.html?q=${query}&order=${order}&page=${page}`; // to be changed
+        current_button.href = `./search.html?q=${query}&order=${order}&page=${page}&diff_sort_select=${order}`; // to be changed
         current_button.classList.add("btn");
         current_button.innerHTML = page;
         pagination_buttons.appendChild(current_button);
 
         if (page + 1 <= pages) {
             var next_button_number = document.createElement("a");
-            next_button_number.href = `./search.html?q=${query}&order=${order}&page=${page + 1}`; // to be changed
+            next_button_number.href = `./search.html?q=${query}&order=${order}&page=${page + 1}&diff_sort_select=${order}`; // to be changed
             next_button_number.classList.add("btn-not-active");
             next_button_number.innerHTML = page + 1;
             pagination_buttons.appendChild(next_button_number);
         }
         if (page != pages) {
             var next_button = document.createElement("a");
-            next_button.href = `./search.html?q=${query}&order=${order}&page=${page + 1}`; // to be changed
+            next_button.href = `./search.html?q=${query}&order=${order}&page=${page + 1}&diff_sort_select=${order}`; // to be changed
             next_button.classList.add("btn-not-active");
             next_button.innerHTML = "<b>&raquo;</b>";
             pagination_buttons.appendChild(next_button);
