@@ -10,7 +10,7 @@ async function render_products() {
     var disp = urlParams.get("disp");
 
     var content_container = document.getElementById("content-container");
-    const URL = `http://localhost:3000/products?&page=${page}`;
+    const URL = `http://localhost:3000/products?page=${page}`;
     let response = await fetch(URL, {
         method: 'GET',
         mode: 'cors',
