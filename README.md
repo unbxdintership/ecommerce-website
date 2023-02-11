@@ -55,3 +55,12 @@ The details regarding the APIs can be found in this [document](https://docs.goog
      docker-compose up
      ```
   5. Now the frontend is running on port 5000 while the backend is running on port 3000.
+
+# Screenshots of website running
+<img alt="Home Page" src="https://github.com/archit-sagar/ecommerce-website/blob/main/docs/initial-docs/screenshots/home-page.png" width="800">
+<img alt="Category Page" src="https://github.com/archit-sagar/ecommerce-website/blob/main/docs/initial-docs/screenshots/category-page.png" width="800">
+<img alt="Pagination" src="https://github.com/archit-sagar/ecommerce-website/blob/main/docs/initial-docs/screenshots/pagination.png" width="800">
+<img alt="Search Page" src="https://github.com/archit-sagar/ecommerce-website/blob/main/docs/initial-docs/screenshots/search-page.png" width="800">
+
+# Additional Links
+  - The details regarding this project can be found [here](https://github.com/archit-sagar/ecommerce-website/blob/main/docs/initial-docs/Design%20Document.pdf).
