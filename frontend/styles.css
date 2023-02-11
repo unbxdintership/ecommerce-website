@@ -151,6 +151,10 @@ nav ul li div:hover {
     padding-left: 50px;
 }
 
+.col-2 p {
+    padding-top: 10px;
+}
+
 .col-2 img {
     max-width: 100%;
     padding: 50px 0;

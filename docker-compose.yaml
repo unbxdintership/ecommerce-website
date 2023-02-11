@@ -1,6 +1,7 @@
 services:
 
   frontend:
+    # image: architsagar/frontend_docker:latest
     image: frontend_docker
     ports:
       - "5000:80"
@@ -23,6 +24,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
 
   backend:
+    # image: architsagar/backend_docker:latest
     image: backend_docker
     ports:
       - 3000:3000
