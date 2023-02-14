@@ -1,20 +1,22 @@
+version: '3'
 services:
 
   frontend:
-    # image: architsagar/frontend_docker:latest
-    image: frontend_docker
+    #image: architsagar/frontend_docker:latest
+    image: ashwink07/frontend_docker:latest
+    #build: ./frontend/
     ports:
       - "5000:80"
     depends_on:
       - backend
     expose:
       - 5000
-    container_name: fe
+    container_name: frontend
 
   database:
     image: postgres
     ports:
-      - 5431:5432
+      - 5432:5432
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -22,10 +24,15 @@ services:
       POSTGRES_DB: unbxd
       POSTGRES_PORT: 5432
       POSTGRES_HOST_AUTH_METHOD: trust
+    container_name: database
 
   backend:
-    # image: architsagar/backend_docker:latest
-    image: backend_docker
+    #image: architsagar/backend_docker:latest
+    #image: ashwink07/backend_docker:latest
+    #image: ashwink07/backend_docker_new
+    image: ashwink07/backend_docker_v1:latest
+    #image: backend_docker_v2
+    #build: ./backend/
     ports:
       - 3000:3000
     restart: always
@@ -34,7 +41,7 @@ services:
       - database
     expose:
       - 3000
-    container_name: be
+    container_name: backend
 
   redis:
     image: redis:latest
@@ -45,6 +52,7 @@ services:
     volumes:
       - ./config/redis.conf:/redis.conf
     command: [ "redis-server", "/redis.conf" ]
+    container_name: redis
 
   adminer:
     image: adminer

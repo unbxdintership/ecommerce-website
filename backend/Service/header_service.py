@@ -14,7 +14,7 @@ class HeaderService:
         #     select category, id from category_table where level=%s
         # ''', (1,))
         # result = self.dboperator.cursor.fetchall()
-        result = self.dboperator.operation(get_cat_id_cat, (1,), res=1)
+        result = self.dboperator.operation(get_cat_id_cat, (0,), res=1)
         final = {}
         for i in result:
             final[i[0]] = []

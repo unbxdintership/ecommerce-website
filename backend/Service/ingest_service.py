@@ -8,6 +8,7 @@ class IngestService:
     def __init__(self):
         self.dboperator = PostgresDB()
         self.misc = MiscService()
+        #self.dboperator.create_database()
 
     def insert_product(self,
                     product_ID,
@@ -44,13 +45,13 @@ class IngestService:
                 product_description.strip(),
             ))
             if (self.misc.check_parent(product_catlevel1)):
-                self.dboperator.operation(set_cat_category, (product_catlevel1.strip(), 0, 1,))
+                self.dboperator.operation(set_cat_category, (product_catlevel1.strip(), 0,))
 
             response = self.dboperator.operation(get_id_cat, (product_catlevel1.strip(),), res=1)
             result = response[0]
 
             # self.dboperator.cursor.execute('''insert into category_table (category,parent_id,productid,level) values(%s,%s,%s,%s)''', (
-            self.dboperator.operation(set_all_category, (product_catlevel2.strip(), result[0], product_ID, 2,))
+            self.dboperator.operation(set_all_category, (product_catlevel2.strip(), result[0], product_ID,))
             return 1
 
     def verify_product(self, product_ID):

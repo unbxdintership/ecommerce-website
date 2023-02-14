@@ -25,8 +25,8 @@ spec:
         io.kompose.service: frontend
     spec:
       containers:
-        - image: architsagar/frontend_docker:latest
-          name: fe
+        - image: ashwink07/frontend_docker:latest
+          name: frontend
           ports:
             - containerPort: 80
             - containerPort: 5000

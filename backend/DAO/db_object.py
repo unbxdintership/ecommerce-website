@@ -4,7 +4,7 @@ class PostgresDB:
 
     def __init__(self):
         self.conn = psycopg2.connect(database="unbxd", user="postgres",
-                                    password="12345", host="database", port=5432)
+                                    password="12345",host="database" ,port=5432)
         self.cursor = self.conn.cursor()
 
     def create_database(self):
@@ -13,8 +13,7 @@ class PostgresDB:
                 id serial,
                 category text,
                 parent_id int,
-                productid text,
-                level int);
+                productid text)
         ''')
         self.cursor.execute('''
             create table if not exists productinfo(product_ID text

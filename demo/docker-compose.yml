@@ -1,0 +1,18 @@
+services:
+  database: 
+    image: postgres
+    ports: 
+      - 5431:5432
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: exampledb
+  adminer:
+    image: adminer
+    restart: always
+    depends_on:
+      - database
+    ports:
+      - 8080:8080
+#b7fe4f3342c1

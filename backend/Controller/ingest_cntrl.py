@@ -7,6 +7,7 @@ class IngestCntrl(Resource):
         self.operator = IngestService()
 
     def post(self):
+        count=1
         data = request.json
         for product in data:
             product_ID = product['uniqueId']
@@ -45,6 +46,12 @@ class IngestCntrl(Resource):
             # ingestion_status = self.operator.insert_product(product_info)
             if ingestion_status == 2:
                 print(f"Product ID: {product['uniqueId']} already present.")
+            if ingestion_status==1:
+                yield {"Data Ingestion":"Successfull"}
+            else:
+                yield {count+1: product['uniqueId']}
+                count=count+1
+
 
         if ingestion_status == 1:
             return {"Data Ingestion": "Successful"}
