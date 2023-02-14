@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   rules:
-  - host: shophub.com
+  - host: shopit.com
     http:
       paths:
       - path: /

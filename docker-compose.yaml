@@ -2,9 +2,8 @@ version: '3'
 services:
 
   frontend:
-    #image: architsagar/frontend_docker:latest
-    image: ashwink07/frontend_docker:latest
-    #build: ./frontend/
+    # image: architsagar/frontend_docker:latest
+    image: frontend_docker
     ports:
       - "5000:80"
     depends_on:
@@ -19,6 +18,7 @@ services:
       - 5432:5432
     restart: always
     environment:
+      # POSTGRES_HOST: database
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
       POSTGRES_DB: unbxd
@@ -27,12 +27,9 @@ services:
     container_name: database
 
   backend:
-    #image: architsagar/backend_docker:latest
-    #image: ashwink07/backend_docker:latest
-    #image: ashwink07/backend_docker_new
+    # image: architsagar/backend_docker:latest
     image: ashwink07/backend_docker_v1:latest
-    #image: backend_docker_v2
-    #build: ./backend/
+    # image: backend_docker
     ports:
       - 3000:3000
     restart: always

@@ -10,19 +10,10 @@ class HeaderService:
         self.misc = MiscService()
 
     def get_catlevel1(self):
-        # self.dboperator.cursor.execute('''
-        #     select category, id from category_table where level=%s
-        # ''', (1,))
-        # result = self.dboperator.cursor.fetchall()
-        result = self.dboperator.operation(get_cat_id_cat, (0,), res=1)
+        result = self.dboperator.operation(get_cat_id_cat, (1,), res=1)
         final = {}
         for i in result:
             final[i[0]] = []
-            # self.dboperator.cursor.execute(''' 
-            #     select distinct category
-            #     from category_table where parent_id=%s
-            # ''', (i[1],))
-            # result_1 = self.dboperator.cursor.fetchall()
             result_1 = self.dboperator.operation(get_cat_cat, (i[1], ), res=1)
             for j in result_1:
                 if not self.misc.check_whitespace(j[0]):

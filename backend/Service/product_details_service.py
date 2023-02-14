@@ -8,9 +8,6 @@ class ProductDetailsService:
         self.dboperator = PostgresDB()
 
     def get_product(self, product_ID):
-        # self.dboperator.cursor.execute(
-        #     "select * from productinfo where product_ID=%s", (product_ID,))
-        # result = self.dboperator.cursor.fetchone()
         response = self.dboperator.operation(get_all_prdinfo, (product_ID, ), res=1)
         result = response[0]
         return [

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-​
 
 <head>
     <meta charset="UTF-8">
@@ -13,15 +12,51 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="icon" href="./shopping-cart.png" type="image/x-icon">
     <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script type="module" src="./sort.js"></script>
 </head>
-​
 
 <body>
     <div id="header-container">
+        <div class="navbar-container">
+            <div class="logo-div">
+                <img src="./shopping-cart.png" alt="logo" class="logo-img">
+            </div>
+            <nav>
+                <ul id="nav-list">
+                    <form action="./search.html" method="get" class="form-search" autocomplete="off">
+                        <input type="text" placeholder="Search products" name="searchbar" class="searchbar" autocomplete="off">
+                    </form>
+                    <li id="cat-products">
+                        <a href="./products.html?page=1">Products</a>
+                    </li>
+                    <li id="cat-home">
+                        <a href="./home.html">Home</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div id="categories-container"></div>
     </div>
-    <div id="content-container"></div>
+    <div id="content-container">
+        <div class="small-container" id="small-container">
+            <h2 class="title" id="title"></h2>
+            <form action="./sort.html" method="get" class="diff_form_search" id="diff_form_search" autocomplete="off">
+                <select class="diff_sort_select" name="diff_sort_select" id="diff_sort_select">
+                    <option value="None">None</option>
+                    <option value="Ascending">Ascending</option>
+                    <option value="Descending">Descending</option>
+                </select>
+                <input type="hidden" name="q" id="q">
+                <input type="hidden" name="page" value="1">
+                <button type="submit" class="btn">Submit</button>
+            </form>
+            <div class="product-grid" id="product-grid"></div>
+        </div>
+        <div class="pagination" id="pagination">
+            <div class="text-right" id="text-right"></div>
+            <div class="text-right-p" id="text-right-p"></div>
+        </div>
+    </div>
 </body>
-​
+<script type="module" src="./sort.js"></script>
 
 </html>
