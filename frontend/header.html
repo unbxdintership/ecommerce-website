@@ -11,12 +11,32 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="icon" href="./shopping-cart.png" type="image/x-icon">
-    <script type="module" src="./header.js"></script>
+
 </head>
 
 <body>
-
     <div id="header-container">
+        <div class="navbar-container">
+            <div class="logo-div">
+                <img src="./shopping-cart.png" alt="logo" class="logo-img">
+            </div>
+            <nav>
+                <ul id="nav-list">
+                    <form action="./search.html" method="get" class="form-search" autocomplete="off">
+                        <input type="text" placeholder="Search products" name="searchbar" class="searchbar" autocomplete="off">
+                    </form>
+                    <li id="cat-products">
+                        <a href="./products.html?page=1">Products</a>
+                    </li>
+                    <li id="cat-home">
+                        <a href="./home.html">Home</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div id="categories-container"></div>
     </div>
-
 </body>
+<script type="module" src="./header.js"></script>
+
+</html>

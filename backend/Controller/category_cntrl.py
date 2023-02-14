@@ -11,10 +11,8 @@ class CategoryCntrl(Resource):
         page = int(request.args.get("page"))
         category_lvl1 = request.args.get("catlvl1")
         category_lvl2 = request.args.get("catlvl2")
-        # changes from here
         order = request.args.get("order")
         print("In category control", order)
-        # changes till here
         category_lvl1 = category_lvl1.replace('amp', "&")
         category_lvl1 = category_lvl1.replace('space', " ")
         category_lvl2 = category_lvl2.replace('amp', "&")
