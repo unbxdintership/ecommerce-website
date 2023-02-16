@@ -8,6 +8,41 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+#loader {
+    display: block;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 90%;
+    width: 90%;
+}
+
+#loader-div {
+    display: block;
+}
+
+#loader-div p {
+    display: flex;
+    margin-top: 20px;
+    justify-content: center;
+    font-size: xx-large;
+}
+
+#loader-img {
+    display: flex;
+    height: 30%;
+    width: 30%;
+    align-items: center;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+#content-container {
+    display: none;
+}
+
 #header-container {
     max-width: 1300px;
     margin: auto;
@@ -22,7 +57,9 @@ body {
 }
 
 .logo-img {
-    width: 50px;
+    margin-left: 100px;
+    width: 300px;
+    height: 100px;
 }
 
 nav {
@@ -63,6 +100,10 @@ nav ul li div:hover {
     width: 400px;
     margin-right: 20px;
     padding: 10px;
+}
+
+.diff_form_search {
+    margin-left: 20px;
 }
 
 .diff_sort_select {
@@ -151,9 +192,9 @@ nav ul li div:hover {
     padding-left: 50px;
 }
 
-.col-2 p {
+/* .col-2 p {
     padding-top: 10px;
-}
+} */
 
 .col-2 img {
     max-width: 100%;
@@ -196,10 +237,11 @@ nav ul li div:hover {
 
 .title {
     text-align: center;
-    margin: 0 auto 80px;
+    margin: 0 auto 30px;
     position: relative;
     line-height: 60px;
     color: #555;
+    text-transform: capitalize;
 }
 
 .title::after {
@@ -229,10 +271,6 @@ nav ul li div:hover {
     align-items: center;
     height: 100px;
     width: 100%;
-    text-transform: capitalize;
-}
-
-.title {
     text-transform: capitalize;
 }
 

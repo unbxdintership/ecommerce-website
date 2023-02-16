@@ -1,5 +1,15 @@
 import { navbar } from "./header.js";
 
+function hideLoader() {
+    const loaderDiv = document.getElementById("loader");
+    loaderDiv.style.display = "none";
+}
+
+function showContent() {
+    const contentDiv = document.getElementById("content-container");
+    contentDiv.style.display = "block";
+}
+
 async function render_products() {
 
     const queryString = window.location.search;
@@ -24,9 +34,11 @@ async function render_products() {
     if (keys.includes("products")) {
         var catlvl1_mod = catlvl1.replaceAll('amp', "&").replaceAll('space', " ");
         var catlvl2_mod = catlvl2.replaceAll('amp', "&").replaceAll('space', " ");
-        var products = result['products'];
-        var page = result['page'];
-        var pages = result['pages'];
+        // var products = result['products'];
+        // var page = result['page'];
+        // var pages = result['pages'];
+
+        let {products, pages, page} = result
 
         if (products.length != 0) {
             var products_container_title = document.getElementById("title");
@@ -117,4 +129,6 @@ async function render_products() {
 window.onload = function () {
     navbar();
     render_products();
+    const timeout_loader = setTimeout(hideLoader, 1500);
+    const timeout_content = setTimeout(showContent, 1500);
 }

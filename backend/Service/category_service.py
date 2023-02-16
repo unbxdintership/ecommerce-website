@@ -1,3 +1,9 @@
+'''
+- receive the required information from the controller
+- perform the required operation
+- return the calculated result back to the controller
+'''
+
 from DAO.db_object import PostgresDB
 from DAO.cache_object import RedisCache
 from Service.db_queries import *
@@ -8,6 +14,7 @@ class CategoryService:
         self.dboperator = PostgresDB()
         self.cacheoperator = RedisCache()
 
+    # insert into redis cache
     def insert_redis_products(self, catlvl1, catlvl2, products):
         redis_query = f"{catlvl1.strip()}-{catlvl2.strip()}"
         for product in products:
@@ -15,6 +22,7 @@ class CategoryService:
         self.cacheoperator.redis.expire(redis_query, 60)
         return 1
 
+    # get the value from redis cache, if present
     def get_redis_products(self, catlvl1, catlvl2):
         redis_query = f"{catlvl1.strip()}-{catlvl2.strip()}"
         final = []
@@ -30,6 +38,7 @@ class CategoryService:
         else:
             return 1
 
+    # get the products belonging to a level 2 category value
     def get_category_lvl2_prods(self, category_lvl1, category_lvl2, order=None):
         status = self.get_redis_products(category_lvl1, category_lvl2)
         if status == 1:
@@ -48,12 +57,10 @@ class CategoryService:
                     get_fields_prdinfo, (id,), res=1)
                 result = response[0]
                 final.append(result)
-                
             insert_status = self.insert_redis_products(
                 category_lvl1, category_lvl2, final)
             if insert_status == 1:
                 print("Inserted into redis...")
-                
             result_list = []
             if order != 'None':
                 for i in final:

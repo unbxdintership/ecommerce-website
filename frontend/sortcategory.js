@@ -1,5 +1,15 @@
 import { navbar } from "./header.js";
 
+function hideLoader() {
+    const loaderDiv = document.getElementById("loader");
+    loaderDiv.style.display = "none";
+}
+
+function showContent() {
+    const contentDiv = document.getElementById("content-container");
+    contentDiv.style.display = "block";
+}
+
 async function render_products() {
 
     const queryString = window.location.search;
@@ -120,4 +130,6 @@ async function render_products() {
 window.onload = function () {
     navbar();
     render_products();
+    const timeout_loader = setTimeout(hideLoader, 1500);
+    const timeout_content = setTimeout(showContent, 1500);
 }
