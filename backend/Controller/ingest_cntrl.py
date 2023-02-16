@@ -1,3 +1,11 @@
+'''
+- handles the incoming request
+- passes the reuired information about the request to the service
+- gets the response from the service
+- encodes the response
+- returns response to user
+'''
+
 from flask_restful import Resource, request
 from Service.ingest_service import IngestService
 
@@ -8,6 +16,8 @@ class IngestCntrl(Resource):
 
     def post(self):
         data = request.json
+
+        # get the required parameters for ingestion
         for product in data:
             product_ID = product['uniqueId']
             product_title = product['title']
@@ -47,6 +57,7 @@ class IngestCntrl(Resource):
             else:
                 product_ID = value.get("uniqueId")
 
+            # update the product only if it exists in the database
             status = self.operator.verify_product(product_ID)
             if not status:
                 print(
@@ -81,4 +92,5 @@ class IngestCntrl(Resource):
                 print("Updated name.")
 
             print(f"Updated product with ID: {product_ID}.\n  *****")
+            
         return {"Data Update": "Successful"}

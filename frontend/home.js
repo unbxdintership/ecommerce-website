@@ -1,7 +1,11 @@
 import { navbar } from "./header.js";
 
-async function render_featured_content() {
+function showContent() {
+    const contentDiv = document.getElementById("content-container");
+    contentDiv.style.display = "block";
+}
 
+async function render_featured_content() {
     const URL = "http://localhost:3000/home/"
     let response = await fetch(URL, {
         method: 'GET',
@@ -56,4 +60,5 @@ async function render_featured_content() {
 window.onload = function () {
     navbar();
     render_featured_content();
+    showContent();
 }

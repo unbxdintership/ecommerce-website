@@ -1,3 +1,7 @@
+'''
+- list of operations which the services require to perform using the database client
+'''
+
 get_id_cat = ("select id from category_table where category=%s")
 get_pid_cat = '''select productid from category_table where parent_id=%s and category=%s'''
 get_fields_prdinfo = '''select product_ID,product_name,product_price,product_description,product_image from productinfo where product_ID=%s'''

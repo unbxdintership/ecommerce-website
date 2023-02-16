@@ -1,14 +1,21 @@
+'''
+- receive the required information from the controller
+- perform the required operation
+- return the calculated result back to the controller
+'''
+
 from DAO.db_object import PostgresDB
 from Service.misc_service import MiscService
 from Service.db_queries import *
 
 
 class IngestService:
+
     def __init__(self):
         self.dboperator = PostgresDB()
         self.misc = MiscService()
-        self.dboperator.create_database()
 
+    # insert new product into the database
     def insert_product(self,
                     product_ID,
                     product_title,
@@ -19,7 +26,6 @@ class IngestService:
                     product_name,
                     product_catlevel1,
                     product_catlevel2):
-
         if self.verify_product(product_ID):
             return 2
         else:
@@ -42,6 +48,7 @@ class IngestService:
                 set_all_category, (product_catlevel2.strip(), result[0], product_ID,))
             return 1
 
+    # check if the product is present in the database
     def verify_product(self, product_ID):
         result = self.dboperator.operation(
             get_all_prdinfo, (product_ID.strip(),), res=1)
@@ -49,6 +56,7 @@ class IngestService:
             return 1
         return 0
 
+    # all functions required to update the respective fields of a product
     def update_title(self, product_ID, product_title):
         self.dboperator.operation(
             update_ptitle_prdinfo, (product_title.strip(), product_ID.strip(),))

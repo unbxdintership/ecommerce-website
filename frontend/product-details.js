@@ -1,5 +1,10 @@
 import { navbar } from "./header.js";
 
+function showContent() {
+    const contentDiv = document.getElementById("content-container");
+    contentDiv.style.display = "block";
+}
+
 async function render_product() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -53,4 +58,5 @@ async function render_product() {
 window.onload = function () {
     navbar();
     render_product();
+    showContent();
 }
