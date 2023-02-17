@@ -26,6 +26,7 @@ async function render_product() {
     var keys = Object.keys(result);
     if (keys.includes("product")) {
         var product = result['product'];
+        var recommended_products = result['recommend'];
 
         if (product.length != 0) {
             var product_details_col1_img = document.getElementById("prod-det-img");
@@ -45,6 +46,34 @@ async function render_product() {
 
             var product_details_col2_details_p = document.getElementById("prod-det-details");
             product_details_col2_details_p.innerHTML = product[6];
+
+            var recommend_product_row = document.getElementById("recommend-row");
+
+            console.log(recommended_products);
+
+            for (let product in recommended_products) {
+                var product_wrapper = document.createElement("a");
+                product_wrapper.href = `./product-details.html?product_id=${recommended_products[product][0]}`;
+                product_wrapper.classList.add("col-4");
+                recommend_product_row.appendChild(product_wrapper);
+
+                var product_div = document.createElement("div");
+                product_div.classList.add("product");
+                product_wrapper.appendChild(product_div);
+
+                var product_img = document.createElement("img");
+                product_img.src = recommended_products[product][2];
+                product_div.appendChild(product_img);
+
+                var product_h4 = document.createElement("h4");
+                product_h4.classList.add("product-title");
+                product_h4.innerHTML = recommended_products[product][1];
+                product_div.appendChild(product_h4);
+
+                var product_p = document.createElement("p");
+                product_p.innerHTML = "$" + recommended_products[product][4];
+                product_div.appendChild(product_p);
+            }
         }
         else {
             var product_title = document.createElement("h1");

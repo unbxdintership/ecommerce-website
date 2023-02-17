@@ -34,9 +34,6 @@ async function render_products() {
     if (keys.includes("products")) {
         var catlvl1_mod = catlvl1.replaceAll('amp', "&").replaceAll('space', " ");
         var catlvl2_mod = catlvl2.replaceAll('amp', "&").replaceAll('space', " ");
-        // var products = result['products'];
-        // var page = result['page'];
-        // var pages = result['pages'];
 
         let {products, pages, page} = result
 
@@ -129,6 +126,6 @@ async function render_products() {
 window.onload = function () {
     navbar();
     render_products();
-    const timeout_loader = setTimeout(hideLoader, 1500);
-    const timeout_content = setTimeout(showContent, 1500);
+    const timeout_loader = setTimeout(hideLoader, 2000);
+    const timeout_content = setTimeout(showContent, 2000);
 }

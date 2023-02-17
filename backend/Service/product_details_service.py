@@ -1,14 +1,25 @@
+'''
+- receive the required information from the controller
+- perform the required operation
+- return the calculated result back to the controller
+'''
+
+import pandas as pd
 from DAO.db_object import PostgresDB
-from Service.db_queries import get_all_prdinfo
-from Service.db_queries import get_name_prdid
-from Service.recommendations import recommendation
+from Service.db_queries import get_all_prdinfo, get_name_prdid
+from Service.recommendations import Recommendation
+
+
 class ProductDetailsService:
 
     def __init__(self):
         self.dboperator = PostgresDB()
-        self.recommend =  recommendation()
+        self.recommend = Recommendation()
+
+    # get the details of the product, given the product ID
     def get_product(self, product_ID):
-        response = self.dboperator.operation(get_all_prdinfo, (product_ID, ), res=1)
+        response = self.dboperator.operation(
+            get_all_prdinfo, (product_ID, ), res=1)
         result = response[0]
         return [
             result[0],
@@ -19,13 +30,15 @@ class ProductDetailsService:
             result[5],
             result[6]
         ]
-    def get_recommendedproducts(self,product_ID):
-        name = self.dboperator.operation(get_name_prdid,(product_ID, ),res=1)
-        
-        recommend_productid = self.recommend.getrecommend_cosine(name[0][0])
-        recommendproducts=[]
+
+    def get_recommended_products(self, product_ID):
+        name = self.dboperator.operation(get_name_prdid, (product_ID, ), res=1)
+
+        recommend_productid = self.recommend.get_recommend_cosine(name[0][0])
+        recommendproducts = []
         for i in range(len(recommend_productid)):
-            if recommend_productid[i]!=product_ID:
-                k=self.dboperator.operation(get_all_prdinfo,(recommend_productid[i],),res=1)
-                recommendproducts.append([k[0][0],k[0][1],k[0][2],k[0][3],k[0][4]])
+            if recommend_productid[i] != product_ID:
+                response = self.dboperator.operation(get_all_prdinfo, (recommend_productid[i],), res=1)
+                result = response[0]
+                recommendproducts.append([result[0], result[1], result[2], result[3], result[4]])
         return recommendproducts

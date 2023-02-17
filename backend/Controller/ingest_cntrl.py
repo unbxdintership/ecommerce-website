@@ -1,3 +1,11 @@
+'''
+- handles the incoming request
+- passes the reuired information about the request to the service
+- gets the response from the service
+- encodes the response
+- returns response to user
+'''
+
 from flask_restful import Resource, request
 from Service.ingest_service import IngestService
 
@@ -8,6 +16,8 @@ class IngestCntrl(Resource):
 
     def post(self):
         data = request.json
+
+        # get the required parameters for ingestion
         for product in data:
             product_ID = product['uniqueId']
             product_title = product['title']
@@ -18,18 +28,6 @@ class IngestCntrl(Resource):
             product_name = product['name']
             product_catlevel1 = product['catlevel1Name']
             product_catlevel2 = product.get('catlevel2Name', "")
-
-            # product_info = {
-            #     "product_ID": product['uniqueId'],
-            #     "product_title": product['title'],
-            #     "product_price": product['price'],
-            #     "product_description" : product.get('productDescription', ""),
-            #     "product_image" : product['productImage'],
-            #     "product_availability" : product['availability'],
-            #     "product_name" : product['name'],
-            #     "product_catlevel1" : product['catlevel1Name'],
-            #     "product_catlevel2" : product.get('catlevel2Name', ""),
-            # }
 
             ingestion_status = self.operator.insert_product(
                 product_ID,
@@ -42,7 +40,6 @@ class IngestCntrl(Resource):
                 product_catlevel1,
                 product_catlevel2
             )
-            # ingestion_status = self.operator.insert_product(product_info)
             if ingestion_status == 2:
                 print(f"Product ID: {product['uniqueId']} already present.")
 
@@ -60,6 +57,7 @@ class IngestCntrl(Resource):
             else:
                 product_ID = value.get("uniqueId")
 
+            # update the product only if it exists in the database
             status = self.operator.verify_product(product_ID)
             if not status:
                 print(
@@ -94,4 +92,5 @@ class IngestCntrl(Resource):
                 print("Updated name.")
 
             print(f"Updated product with ID: {product_ID}.\n  *****")
+            
         return {"Data Update": "Successful"}
