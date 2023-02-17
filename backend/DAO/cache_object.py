@@ -1,8 +1,5 @@
-'''
-- declaration of cache objects
-'''
-
 import redis
+
 
 class RedisCache:
 
