@@ -14,7 +14,7 @@ app = Flask(__name__)
 API = Api(app)
 CORS(app)
 
-PostgresDB().create_database()
+#PostgresDB().create_database()
 
 API.add_resource(HeaderCntrl, "/")
 API.add_resource(HomeCntrl, "/home/")
