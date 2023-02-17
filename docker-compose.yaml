@@ -2,7 +2,9 @@ version: '3'
 services:
 
   frontend:
-    image: frontend_docker
+    #image: architsagar/frontend_docker:latest
+    image: ashwink07/frontend_docker:latest
+    #build: ./frontend/
     ports:
       - "5000:80"
     depends_on:
@@ -25,7 +27,9 @@ services:
     container_name: database
 
   backend:
+    #image: ashwink07/backend_docker_v1:latest #working
     image: backend_docker
+    #build: ./backend/
     ports:
       - 3000:3000
     restart: always

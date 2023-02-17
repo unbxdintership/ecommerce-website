@@ -41,11 +41,6 @@ class CategoryService:
             response = self.dboperator.operation(
                 get_id_cat, (category_lvl1, ), res=1)
             result = response[0]
-            # self.dboperator.cursor.execute('''
-            #     select productid from category_table where parent_id=%s and category=%s''', (
-            #     result[0],
-            #     category_lvl2,))
-            # result = self.dboperator.cursor.fetchall()
             result = self.dboperator.operation(
                 get_pid_cat, (result[0], category_lvl2, ), res=1)
             product_IDs = []
@@ -57,42 +52,12 @@ class CategoryService:
                 response = self.dboperator.operation(
                     get_fields_prdinfo, (id,), res=1)
                 result = response[0]
-                # result = list(result)
-                # temp = result[0]
-                # result[0] = float(result[2])
-                # result[2] = temp
                 final.append(result)
-            # final=list(final)
-            # print(final)
-
-            # result_list = []
-
-            # if order != None:
-            #     for i in final:
-            #         result_list.append([float(i[2]), i[1], i[0], i[3], i[4]])
-            #     if order == 'Ascending':
-            #         result_list.sort()
-            #     else:
-            #         result_list.sort(reverse=True)
-            #     print(result_list)
-            #     for i in result_list:
-            #         temp = i[0]
-            #         i[0] = i[2]
-            #         i[2] = temp
-            #         i[2] = str(i[2])
-            #     # print(result_list)
-            # else:
-            #     return final
 
             insert_status = self.insert_redis_products(
                 category_lvl1, category_lvl2, final)
             if insert_status == 1:
                 print("Inserted into redis...")
-
-            # if order=='Ascending':
-            #     final = final.sort()
-            # elif order=='Descending':
-            #     final = final.sort(reverse=True)
             result_list = []
 
             if order != 'None':
@@ -111,11 +76,6 @@ class CategoryService:
 
             return final
         else:
-
-            # if order=='Ascending':
-            #     status = status.sort()
-            # elif order=='Descending':
-            #     status = status.sort(reverse=True)
             result_list = []
 
             if order != 'None':
