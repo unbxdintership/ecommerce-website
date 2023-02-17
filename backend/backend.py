@@ -1,3 +1,9 @@
+'''
+- handles all the requests coming in from the frontend
+- reroutes the request to the respective controller based on the API endpoint
+- returns the response from the controller back to the frontend
+'''
+
 from flask import Flask
 from flask_restful import Api
 from flask_cors import CORS
@@ -9,12 +15,12 @@ from Controller.category_cntrl import CategoryCntrl
 from Controller.search_cntrl import SearchCntrl
 from Controller.ingest_cntrl import IngestCntrl
 from DAO.db_object import PostgresDB
-from Controller.test_contrl import Testing
+from Controller.test_cntrl import Testing
 app = Flask(__name__)
 API = Api(app)
 CORS(app)
 
-#PostgresDB().create_database()
+PostgresDB().create_database()
 
 API.add_resource(HeaderCntrl, "/")
 API.add_resource(HomeCntrl, "/home/")

@@ -1,4 +1,9 @@
+'''
+- list of operations which the services require to perform using the database client
+'''
+
 get_name_prdid = '''select product_name from productinfo where product_ID=%s'''
+get_title_prdinfo = '''select product_title from productinfo where product_ID=%s;'''
 get_id_cat = ("select id from category_table where category=%s")
 get_pid_cat = '''select productid from category_table where parent_id=%s and category=%s'''
 get_fields_prdinfo = '''select product_ID,product_name,product_price,product_description,product_image from productinfo where product_ID=%s'''
@@ -17,4 +22,5 @@ update_pname_prdinfo = '''update productinfo set product_name=%s where product_I
 update_pimage_prdinfo = '''update productinfo set product_image=%s where product_ID=%s'''
 get_all_cat = '''select * from category_table where category=%s'''
 get_all_prdinfo = '''select * from productinfo where product_ID=%s'''
+get_all_title_prdinfo = '''select * from productinfo where product_title=%s;'''
 get_fields_order_prdinfo = '''select product_ID, product_name, product_price, product_description, product_image from productinfo order by product_name;'''
