@@ -28,7 +28,7 @@ class PostgresDB:
             product_price text,
             product_availability text,
             product_description text);
-        ''')
+            ''')
         print("Created database...")
         self.conn.commit()
 
