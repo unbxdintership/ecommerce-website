@@ -92,5 +92,5 @@ class IngestCntrl(Resource):
                 print("Updated name.")
 
             print(f"Updated product with ID: {product_ID}.\n  *****")
-            
+
         return {"Data Update": "Successful"}

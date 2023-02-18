@@ -16,6 +16,7 @@ from Controller.search_cntrl import SearchCntrl
 from Controller.ingest_cntrl import IngestCntrl
 from DAO.db_object import PostgresDB
 from Controller.test_cntrl import Testing
+
 app = Flask(__name__)
 API = Api(app)
 CORS(app)
@@ -29,7 +30,7 @@ API.add_resource(ProductDetailsCntrl, "/products/<product_ID>")
 API.add_resource(CategoryCntrl, "/category")
 API.add_resource(SearchCntrl, "/search")
 API.add_resource(IngestCntrl, "/ingestion")
-API.add_resource(Testing,'/testing')
+API.add_resource(Testing, '/testing')
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=3000)

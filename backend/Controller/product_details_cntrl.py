@@ -16,6 +16,6 @@ class ProductDetailsCntrl(Resource):
 
     def get(self, product_ID):
         product = self.retriever.get_product(product_ID)
-        recommended_products = self.retriever.get_recommended_products(product_ID)
-        
+        recommended_products = self.retriever.get_recommended_products(
+            product_ID)
         return {"product": product, "recommend": recommended_products}

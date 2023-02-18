@@ -388,7 +388,7 @@ nav ul li div:hover {
 }
 
 .single-product h4 {
-    margin: 20px 0;
+    margin-bottom: 30px;
     font-size: 22px;
     font-weight: bold;
 }
@@ -398,6 +398,7 @@ nav ul li div:hover {
     width: 95%;
     align-items: center;
     justify-content: center;
+    margin-top: 50px;
     margin-left: auto;
     margin-right: auto;
 }

@@ -16,5 +16,5 @@ class HeaderCntrl(Resource):
 
     def get(self):
         categories = self.operator.get_catlevel1()
-        
+
         return {"categories": categories}

@@ -40,5 +40,5 @@ class SearchCntrl(Resource):
         result = self.misc.get_start_end(len(all_result), page)
         pages, start, end = result[0], result[1], result[2]
         products = all_result[start: end]
-        
+
         return {"products": products, "pages": pages, "page": page}
