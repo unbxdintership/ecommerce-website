@@ -32,12 +32,15 @@ class ProductDetailsService:
         ]
 
     def get_recommended_products(self, product_ID):
-        name = self.dboperator.operation(get_name_prdid, (product_ID, ), res=1)
-
-        recommend_productid = self.recommend.get_recommend_cosine(name[0][0])
+        try:
+            recommend_productid = self.recommend.get_recommend_cosine(product_ID)
+        except:
+             name = self.dboperator.operation(get_name_prdid,(product_ID,),res=1)
+             name = name[0][0]
+             name = name.lower()
+             recommend_productid = self.recommend.get_similar(name)
         recommendproducts = []
         for i in range(len(recommend_productid)):
-            if recommend_productid[i] != product_ID:
                 response = self.dboperator.operation(get_all_prdinfo, (recommend_productid[i],), res=1)
                 result = response[0]
                 recommendproducts.append([result[0], result[1], result[2], result[3], result[4]])
