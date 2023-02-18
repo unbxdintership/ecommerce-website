@@ -3,6 +3,12 @@ function showhide(id) {
     element.style.display = (element.style.display == 'block') ? 'none' : 'block';
 }
 
+function showcat1(id) {
+    var li_element = document.getElementById(id);
+    var catlvl1 = li_element.innerHTML;
+    window.location.href = `./category.html?catlvl1=${catlvl1}&page=1`;
+}
+
 async function navbar() {
     const URL = "http://localhost:3000/"
 
@@ -66,13 +72,13 @@ async function navbar() {
 
             var catlvl1_li = document.createElement('li');
             catlvl1_li.id = `cat-${category}`;
+            catlvl1_li.innerHTML = category;
             catlvl1_li.classList.add("cat-" + category);
-            var catlvl1_div = document.createElement("div");
-            catlvl1_div.innerHTML = category;
-            catlvl1_div.style.textTransform = "capitalize";
-            catlvl1_li.appendChild(catlvl1_div);
             catlvl1_li.onclick = function () {
                 showhide("category-lvl1-" + category)
+            };
+            catlvl1_li.ondblclick = function () {
+                showcat1("cat-" + category);
             };
             products_li.before(catlvl1_li);
         }

@@ -75,6 +75,7 @@ nav ul {
 nav ul li {
     display: inline-block;
     margin-right: 20px;
+    text-transform: capitalize;
 }
 
 a {
@@ -86,11 +87,7 @@ nav ul li a:hover {
     color: #000;
 }
 
-nav ul li div {
-    color: #555;
-}
-
-nav ul li div:hover {
+nav ul li:hover {
     cursor: pointer;
     color: #000;
 }
