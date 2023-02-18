@@ -4,11 +4,12 @@
 
 import psycopg2
 
+
 class PostgresDB:
 
     def __init__(self):
-        self.conn = psycopg2.connect(database="unbxd", user="postgres",
-                                    password="12345", host="database", port=5432)
+        self.conn = psycopg2.connect(
+            database="unbxd", user="postgres", password="12345", host="database", port=5432)
         self.cursor = self.conn.cursor()
 
     # create database tables if it does not exist

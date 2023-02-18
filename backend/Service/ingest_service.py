@@ -16,16 +16,7 @@ class IngestService:
         self.misc = MiscService()
 
     # insert new product into the database
-    def insert_product(self,
-                    product_ID,
-                    product_title,
-                    product_price,
-                    product_description,
-                    product_image,
-                    product_availability,
-                    product_name,
-                    product_catlevel1,
-                    product_catlevel2):
+    def insert_product(self, product_ID, product_title, product_price, product_description, product_image, product_availability, product_name, product_catlevel1, product_catlevel2):
         if self.verify_product(product_ID):
             return 2
         else:

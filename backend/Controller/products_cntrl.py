@@ -17,7 +17,7 @@ class ProductsCntrl(Resource):
         self.misc = MiscService()
 
     def get(self):
-        #get the reuired page parameter from request
+        # get the reuired page parameter from request
         page = int(request.args.get("page"))
 
         # get all the products present in the database in the ascending order
