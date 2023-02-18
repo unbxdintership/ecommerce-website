@@ -28,8 +28,12 @@ class CategoryCntrl(Resource):
         category_lvl2 = category_lvl2.replace('amp', "&")
         category_lvl2 = category_lvl2.replace('space', " ")
 
-        all_products = self.operator.get_category_lvl2_prods(
-            category_lvl1, category_lvl2, order)
+        if category_lvl2 != 'null':
+            all_products = self.operator.get_category_lvl2_prods(
+                category_lvl1, category_lvl2, order)
+        else:
+            all_products = self.operator.get_category_lvl1_prods(
+                category_lvl1, order)
 
         # get the products to show to the user on a particular page
         result = self.misc.get_start_end(len(all_products), page)

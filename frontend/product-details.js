@@ -49,8 +49,6 @@ async function render_product() {
 
             var recommend_product_row = document.getElementById("recommend-row");
 
-            console.log(recommended_products);
-
             for (let product in recommended_products) {
                 var product_wrapper = document.createElement("a");
                 product_wrapper.href = `./product-details.html?product_id=${recommended_products[product][0]}`;

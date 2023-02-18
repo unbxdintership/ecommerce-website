@@ -22,6 +22,59 @@ class CategoryService:
         self.cacheoperator.redis.expire(redis_query, 60)
         return 1
 
+    def get_category_lvl1_prods(self, category_lvl1, order=None):
+        status = self.get_redis_products(category_lvl1, catlvl2="")
+        if status == 1:
+            response = self.dboperator.operation(
+                get_id_cat, (category_lvl1, ), res=1)
+            result = response[0]
+            result = self.dboperator.operation(
+                get_pid_lvl1_cat, (result[0],), res=1)
+            product_IDs = []
+            final = []
+            for product in result:
+                product_IDs.append(product[0])
+            for id in product_IDs:
+                response = self.dboperator.operation(
+                    get_fields_prdinfo, (id,), res=1)
+                result = response[0]
+                final.append(result)
+            insert_status = self.insert_redis_products(
+                category_lvl1, catlvl2="", products=final)
+            if insert_status == 1:
+                print("Inserted into redis...")
+            result_list = []
+            if order != 'None':
+                for i in final:
+                    result_list.append([float(i[2]), i[1], i[0], i[3], i[4]])
+                if order == 'Ascending':
+                    result_list.sort()
+                else:
+                    result_list.sort(reverse=True)
+                for i in result_list:
+                    temp = i[0]
+                    i[0] = i[2]
+                    i[2] = temp
+                    i[2] = str(i[2])
+                return result_list
+            return final
+        else:
+            result_list = []
+            if order != 'None':
+                for i in status:
+                    result_list.append([float(i[2]), i[1], i[0], i[3], i[4]])
+                if order == 'Ascending':
+                    result_list.sort()
+                else:
+                    result_list.sort(reverse=True)
+                for i in result_list:
+                    temp = i[0]
+                    i[0] = i[2]
+                    i[2] = temp
+                    i[2] = str(i[2])
+                return result_list
+            return status
+
     # get the value from redis cache, if present
     def get_redis_products(self, catlvl1, catlvl2):
         redis_query = f"{catlvl1.strip()}-{catlvl2.strip()}"
@@ -48,7 +101,6 @@ class CategoryService:
             result = self.dboperator.operation(
                 get_pid_cat, (result[0], category_lvl2, ), res=1)
             product_IDs = []
-            print("In category service", order)
             final = []
             for product in result:
                 product_IDs.append(product[0])

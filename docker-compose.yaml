@@ -2,6 +2,7 @@ version: '3'
 services:
 
   frontend:
+    # image: architsagar/frontend_docker
     image: frontend_docker
     ports:
       - "5000:80"
@@ -25,6 +26,7 @@ services:
     container_name: database
 
   backend:
+    # image: architsagar/backend_docker
     image: backend_docker
     ports:
       - 3000:3000

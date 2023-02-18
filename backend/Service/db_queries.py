@@ -6,6 +6,7 @@ get_name_prdid = '''select product_name from productinfo where product_ID=%s'''
 get_title_prdinfo = '''select product_title from productinfo where product_ID=%s;'''
 get_id_cat = ("select id from category_table where category=%s")
 get_pid_cat = '''select productid from category_table where parent_id=%s and category=%s'''
+get_pid_lvl1_cat = '''select productid from category_table where parent_id=%s'''
 get_fields_prdinfo = '''select product_ID,product_name,product_price,product_description,product_image from productinfo where product_ID=%s'''
 get_cat_id_cat = '''select category, id from category_table where parent_id=%s'''
 get_cat_cat = '''select distinct category from category_table where parent_id=%s'''
