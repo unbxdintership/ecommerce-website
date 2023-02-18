@@ -1,7 +1,8 @@
 '''
 - list of operations which the services require to perform using the database client
 '''
-
+get_catlevel1 = '''select category from category_table where id=%s'''
+get_spid_cat = '''select id,parent_id from category_table where productid=%s'''
 get_name_prdid = '''select product_name from productinfo where product_ID=%s'''
 get_title_prdinfo = '''select product_title from productinfo where product_ID=%s;'''
 get_id_cat = ("select id from category_table where category=%s")
