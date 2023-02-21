@@ -3,10 +3,8 @@ function showhide(id) {
     element.style.display = (element.style.display == 'block') ? 'none' : 'block';
 }
 
-function showcat1(id) {
-    var li_element = document.getElementById(id);
-    var catlvl1 = li_element.innerHTML;
-    window.location.href = `./category.html?catlvl1=${catlvl1}&page=1`;
+function showcat1(catid) {
+    window.location.href = `./category.html?catid=${catid}&page=1`;
 }
 
 async function navbar() {
@@ -26,7 +24,7 @@ async function navbar() {
     var result = await response.json();
     var categories = result['categories']
     for (let category in categories) {
-        if (categories[category].length != 0) {
+        if (categories[category].length != 1) {
 
             var catlvl1_container = document.createElement("div");
             catlvl1_container.classList.add("category-lvl1");
@@ -36,7 +34,7 @@ async function navbar() {
 
             var lvl2_length = categories[category].length;
             var rem = lvl2_length % 4;
-            var counter = 0;
+            var counter = 1;
             var prod_per_col = Math.floor(lvl2_length / 4);
             if (rem != 0) {
                 prod_per_col += 1;
@@ -59,8 +57,8 @@ async function navbar() {
                     if (categories[category][counter]) {
                         var catlvl2_value = document.createElement("a");
                         catlvl2_value.classList.add("category-lvl2-value");
-                        catlvl2_value.href = `./category.html?catlvl1=${category.replaceAll('&', 'amp').replaceAll(" ", "space")}&catlvl2=${categories[category][counter].replaceAll('&', 'amp').replaceAll(" ", "space")}&page=1`;
-                        catlvl2_value.innerHTML = categories[category][counter];
+                        catlvl2_value.href = `./category.html?catid=${categories[category][counter][1]}&page=1`;
+                        catlvl2_value.innerHTML = categories[category][counter][0];
                         catlvl2.appendChild(catlvl2_value);
                         counter += 1;
                     }
@@ -78,7 +76,7 @@ async function navbar() {
                 showhide("category-lvl1-" + category)
             };
             catlvl1_li.ondblclick = function () {
-                showcat1("cat-" + category);
+                showcat1(categories[category][0]);
             };
             products_li.before(catlvl1_li);
         }

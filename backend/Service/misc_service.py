@@ -6,6 +6,7 @@
 
 from DAO.db_object import PostgresDB
 from Service.db_queries import get_all_cat
+from Service.db_queries import get_cat_pid_cat
 
 
 class MiscService:
@@ -31,7 +32,14 @@ class MiscService:
             return 1
         return 0
 
+    def check_catparent(self, category, parent_id):
+        result = self.dboperator.operation(
+            get_cat_pid_cat, (category, parent_id,), res=1)
+        if len(result) == 0:
+            return 1
+        return 0
     # get the start and end index based on the page number
+
     def get_start_end(self, products_length, page):
         pages = products_length//18
         if (products_length % 18) != 0:

@@ -6,8 +6,9 @@
 
 import pandas as pd
 from DAO.db_object import PostgresDB
-from Service.db_queries import get_all_prdinfo, get_name_prdid,get_spid_cat,get_catlevel1
+from Service.db_queries import get_all_prdinfo, get_name_prdid
 from Service.recommendations import Recommendation
+
 
 class ProductDetailsService:
 
@@ -37,12 +38,7 @@ class ProductDetailsService:
         except:
             name = self.dboperator.operation(
                 get_name_prdid, (product_ID,), res=1)
-            result = self.dboperator.operation(get_spid_cat,(product_ID, ), res=1)
-            sid = result[0][0]
-            pid = result[0][1]
-            catlevel1Name = self.dboperator.operation(get_catlevel1,(pid, ), res=1)
-
-            name = name[0][0]+catlevel1Name[0][0]
+            name = name[0][0]
             name = name.lower()
             recommend_productid = self.recommend.get_similar(name)
         recommendproducts = []

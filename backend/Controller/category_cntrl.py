@@ -16,28 +16,19 @@ class CategoryCntrl(Resource):
         self.operator = CategoryService()
         self.misc = MiscService()
 
-    def get(self):
+    def get(self, catid):
         # get the required parameters from the request
         page = int(request.args.get("page"))
-        category_lvl1 = request.args.get("catlvl1")
-        category_lvl2 = request.args.get("catlvl2")
-        order = request.args.get("order")
+        order = request.args.get("order", "None")
+        
+        response = self.operator.get_category_prods(catid, order)
 
-        category_lvl1 = category_lvl1.replace('amp', "&")
-        category_lvl1 = category_lvl1.replace('space', " ")
-        category_lvl2 = category_lvl2.replace('amp', "&")
-        category_lvl2 = category_lvl2.replace('space', " ")
-
-        if category_lvl2 != 'null':
-            all_products = self.operator.get_category_lvl2_prods(
-                category_lvl1, category_lvl2, order)
-        else:
-            all_products = self.operator.get_category_lvl1_prods(
-                category_lvl1, order)
+        all_products = response['products']
+        title = response['title']
 
         # get the products to show to the user on a particular page
         result = self.misc.get_start_end(len(all_products), page)
         pages, start, end = result[0], result[1], result[2]
         products = all_products[start: end]
 
-        return {"products": products, "pages": pages, "page": page}
+        return {"products": products, "pages": pages, "page": page, "title": title}
