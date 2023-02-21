@@ -25,7 +25,7 @@ spec:
         io.kompose.service: backend
     spec:
       containers:
-        - image: ashwink07/backend_docker_v1:latest
+        - image: ashwink07/backend_docker_v1
           name: backend
           ports:
             - containerPort: 3000
