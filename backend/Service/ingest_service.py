@@ -20,6 +20,14 @@ class IngestService:
         if self.verify_product(product_ID):
             return 2
         else:
+            if (self.misc.check_parent(product_catlevel1.strip())):
+                self.dboperator.operation(set_cat_category, (product_catlevel1.strip(), 0,))
+
+            response = self.dboperator.operation(get_id_cat, (product_catlevel1.strip(),), res=1)
+            result = response[0][0]
+            if (self.misc.check_catparent(product_catlevel2.strip(),result)):
+                self.dboperator.operation(set_cat_category, (product_catlevel2.strip(), result,))
+            catlevel2 = self.dboperator.operation(get_sid_cat,(product_catlevel2.strip(),result,), res=1)
             self.dboperator.operation(set_all_prdinfo, (
                 product_ID.strip(),
                 product_title.strip(),
@@ -28,15 +36,8 @@ class IngestService:
                 (str(product_price)).strip(),
                 product_availability.strip(),
                 product_description.strip(),
+                catlevel2[0][0]
             ))
-            if (self.misc.check_parent(product_catlevel1)):
-                self.dboperator.operation(
-                    set_cat_category, (product_catlevel1.strip(), 0,))
-            response = self.dboperator.operation(
-                get_id_cat, (product_catlevel1.strip(),), res=1)
-            result = response[0]
-            self.dboperator.operation(
-                set_all_category, (product_catlevel2.strip(), result[0], product_ID,))
             return 1
 
     # check if the product is present in the database

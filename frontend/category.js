@@ -14,11 +14,10 @@ async function render_products() {
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    var catlvl1 = urlParams.get('catlvl1');
-    var catlvl2 = urlParams.get('catlvl2');
+    var catid = urlParams.get('catid');
     var page = urlParams.get('page');
 
-    const URL = `http://localhost:3000/category?catlvl1=${catlvl1}&catlvl2=${catlvl2}&page=${page}`
+    const URL = `http://localhost:3000/category/${catid}?page=${page}`;
     let response = await fetch(URL, {
         method: 'GET',
         mode: 'cors',
@@ -32,27 +31,17 @@ async function render_products() {
     var keys = Object.keys(result);
 
     if (keys.includes("products")) {
-        var catlvl1_mod = catlvl1.replaceAll('amp', "&").replaceAll('space', " ");
-        if (catlvl2 != null) {
-            var catlvl2_mod = catlvl2.replaceAll('amp', "&").replaceAll('space', " ");
-        }
 
-        let { products, pages, page } = result
+        console.log(result['products']);
+
+        let { products, pages, page, title } = result
 
         if (products.length != 0) {
             var products_container_title = document.getElementById("title");
-            if (catlvl2 != null) {
-                products_container_title.innerHTML = `${catlvl1_mod}-${catlvl2_mod} Products`;
-            }
-            else {
-                products_container_title.innerHTML = `${catlvl1_mod} Products`;
-            }
+            products_container_title.innerHTML = `"${title}" Products`;
 
-            var diff_hidden_catlvl1 = document.getElementById("catlvl1");
-            diff_hidden_catlvl1.value = catlvl1;
-
-            var diff_hidden_catlvl2 = document.getElementById("catlvl2");
-            diff_hidden_catlvl2.value = catlvl2;
+            var diff_hidden_catid = document.getElementById("catid");
+            diff_hidden_catid.value = catid;
 
             var products_grid = document.getElementById("product-grid");
 
@@ -82,80 +71,39 @@ async function render_products() {
 
             var pagination_buttons = document.getElementById("text-right");
 
-            catlvl1 = catlvl1.replaceAll('&', "amp").replaceAll(' ', "space");
-            if (catlvl2 != null) {
-                catlvl2 = catlvl2.replaceAll('&', "amp").replaceAll(' ', "space");
-
-                if (page != 1) {
-                    var previous_button = document.createElement("a");
-                    previous_button.href = `./category.html?catlvl1=${catlvl1}&catlvl2=${catlvl2}&page=${page - 1}`;
-                    previous_button.classList.add("btn-not-active");
-                    previous_button.innerHTML = "<b>&laquo;</b>";
-                    pagination_buttons.appendChild(previous_button);
-                }
-                if (page - 1 != 0) {
-                    var previous_button_number = document.createElement("a");
-                    previous_button_number.href = `./category.html?catlvl1=${catlvl1}&catlvl2=${catlvl2}&page=${page - 1}`;
-                    previous_button_number.classList.add("btn-not-active");
-                    previous_button_number.innerHTML = page - 1;
-                    pagination_buttons.appendChild(previous_button_number);
-                }
-                var current_button = document.createElement("a");
-                current_button.href = `./category.html?catlvl1=${catlvl1}&catlvl2=${catlvl2}&page=${page}`;
-                current_button.classList.add("btn");
-                current_button.innerHTML = page;
-                pagination_buttons.appendChild(current_button);
-
-                if (page + 1 <= pages) {
-                    var next_button_number = document.createElement("a");
-                    next_button_number.href = `./category.html?catlvl1=${catlvl1}&catlvl2=${catlvl2}&page=${page + 1}`;
-                    next_button_number.classList.add("btn-not-active");
-                    next_button_number.innerHTML = page + 1;
-                    pagination_buttons.appendChild(next_button_number);
-                }
-                if (page != pages) {
-                    var next_button = document.createElement("a");
-                    next_button.href = `./category.html?catlvl1=${catlvl1}&catlvl2=${catlvl2}&page=${page + 1}`;
-                    next_button.classList.add("btn-not-active");
-                    next_button.innerHTML = "<b>&raquo;</b>";
-                    pagination_buttons.appendChild(next_button);
-                }
+            if (page != 1) {
+                var previous_button = document.createElement("a");
+                previous_button.href = `./category.html?catid=${catid}&page=${page - 1}`;
+                previous_button.classList.add("btn-not-active");
+                previous_button.innerHTML = "<b>&laquo;</b>";
+                pagination_buttons.appendChild(previous_button);
             }
-            else {
-                if (page != 1) {
-                    var previous_button = document.createElement("a");
-                    previous_button.href = `./category.html?catlvl1=${catlvl1}&page=${page - 1}`;
-                    previous_button.classList.add("btn-not-active");
-                    previous_button.innerHTML = "<b>&laquo;</b>";
-                    pagination_buttons.appendChild(previous_button);
-                }
-                if (page - 1 != 0) {
-                    var previous_button_number = document.createElement("a");
-                    previous_button_number.href = `./category.html?catlvl1=${catlvl1}&page=${page - 1}`;
-                    previous_button_number.classList.add("btn-not-active");
-                    previous_button_number.innerHTML = page - 1;
-                    pagination_buttons.appendChild(previous_button_number);
-                }
-                var current_button = document.createElement("a");
-                current_button.href = `./category.html?catlvl1=${catlvl1}&page=${page}`;
-                current_button.classList.add("btn");
-                current_button.innerHTML = page;
-                pagination_buttons.appendChild(current_button);
+            if (page - 1 != 0) {
+                var previous_button_number = document.createElement("a");
+                previous_button_number.href = `./category.html?catid=${catid}&page=${page - 1}`;
+                previous_button_number.classList.add("btn-not-active");
+                previous_button_number.innerHTML = page - 1;
+                pagination_buttons.appendChild(previous_button_number);
+            }
+            var current_button = document.createElement("a");
+            current_button.href = `./category.html?catid=${catid}&page=${page}`;
+            current_button.classList.add("btn");
+            current_button.innerHTML = page;
+            pagination_buttons.appendChild(current_button);
 
-                if (page + 1 <= pages) {
-                    var next_button_number = document.createElement("a");
-                    next_button_number.href = `./category.html?catlvl1=${catlvl1}&page=${page + 1}`;
-                    next_button_number.classList.add("btn-not-active");
-                    next_button_number.innerHTML = page + 1;
-                    pagination_buttons.appendChild(next_button_number);
-                }
-                if (page != pages) {
-                    var next_button = document.createElement("a");
-                    next_button.href = `./category.html?catlvl1=${catlvl1}&page=${page + 1}`;
-                    next_button.classList.add("btn-not-active");
-                    next_button.innerHTML = "<b>&raquo;</b>";
-                    pagination_buttons.appendChild(next_button);
-                }
+            if (page + 1 <= pages) {
+                var next_button_number = document.createElement("a");
+                next_button_number.href = `./category.html?catid=${catid}&page=${page + 1}`;
+                next_button_number.classList.add("btn-not-active");
+                next_button_number.innerHTML = page + 1;
+                pagination_buttons.appendChild(next_button_number);
+            }
+            if (page != pages) {
+                var next_button = document.createElement("a");
+                next_button.href = `./category.html?catid=${catid}&page=${page + 1}`;
+                next_button.classList.add("btn-not-active");
+                next_button.innerHTML = "<b>&raquo;</b>";
+                pagination_buttons.appendChild(next_button);
             }
 
             var pagination_p = document.getElementById("text-right-p");

@@ -1,5 +1,10 @@
 import { navbar } from "./header.js";
 
+function hideLoader() {
+    const loaderDiv = document.getElementById("loader");
+    loaderDiv.style.display = "none";
+}
+
 function showContent() {
     const contentDiv = document.getElementById("content-container");
     contentDiv.style.display = "block";
@@ -85,5 +90,6 @@ async function render_product() {
 window.onload = function () {
     navbar();
     render_product();
-    showContent();
+    const timeout_loader = setTimeout(hideLoader, 2000);
+    const timeout_content = setTimeout(showContent, 2000);
 }

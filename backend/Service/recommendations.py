@@ -13,9 +13,8 @@ class Recommendation():
         self.df = self.df.reset_index()
         self.df = self.df.drop('index', axis=1)
         self.df['name'] = self.df['name'].str.lower()
-        #self.df['productDescription'] = self.df['productDescription'].str.lower()
-        self.df = self.df.astype({'catlevel1Name':str})
-        self.df['name']=self.df['name']+self.df['catlevel1Name']
+        self.df = self.df.astype({'catlevel2Name': str})
+        self.df['name'] = self.df['name']+self.df['catlevel2Name']
         self.df2 = self.df.drop(['categoryType', 'color', 'productUrl', 'availability', 'size', 'category', 'productImage',
                                 'sku', 'price', 'catlevel4Name', 'uniqueId', 'gender', 'catlevel1Name', 'catlevel2Name', 'catlevel3Name',], axis=1)
         self.df2['data'] = self.df2[self.df2.columns[1:]].apply(

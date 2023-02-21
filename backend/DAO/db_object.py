@@ -18,17 +18,18 @@ class PostgresDB:
             create table if not exists category_table(
                 id serial,
                 category text,
-                parent_id int,
-                productid text)
+                parent_id int)
         ''')
         self.cursor.execute('''
-            create table if not exists productinfo(product_ID text
-            ,product_title text,
-            product_image text,
-            product_name text,
-            product_price text,
-            product_availability text,
-            product_description text);
+            create table if not exists productinfo(
+                product_ID text,
+                product_title text,
+                product_image text,
+                product_name text,
+                product_price text,
+                product_availability text,
+                product_description text,
+                catid int);
             ''')
         print("Created database...")
         self.conn.commit()

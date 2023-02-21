@@ -9,4 +9,4 @@ RUN pip list
 
 EXPOSE 3000
 
-CMD ["python3","backend.py"]
+CMD ["python3", "-u", "backend.py"]
