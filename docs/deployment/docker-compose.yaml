@@ -3,8 +3,8 @@ services:
 
   frontend:
     #image: architsagar/frontend_docker:latest
-    #image: frontend_docker
-    image : ashwink07/frontend_docker_v1:latest
+    image: frontend_docker
+    # image : ashwink07/frontend_docker_v1:latest
     ports:
       - "5000:80"
     depends_on:
@@ -28,8 +28,8 @@ services:
 
   backend:
     #image: architsagar/backend_docker:latest
-    # image: backend_docker
-    image: ashwink07/backend_docker_v2:latest
+    image: backend_docker
+    # image: ashwink07/backend_docker_v2:latest
     ports:
       - 3000:3000
     restart: always
